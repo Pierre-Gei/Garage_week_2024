@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../models/benneModel.dart';
 import '../profile_select_screen/profile_select_screen.dart';
+import '../../services/benneServices.dart';
 
 void main() {
   runApp(const ClientScreen());
@@ -101,6 +102,14 @@ class ClientInfo extends StatelessWidget {
                                       child: Text('Demander le vidage'),
                                       onPressed: () {
                                         //TODO: Empty the bin
+                                        benneServices().addBenne(Benne(
+                                          id: benne.id,
+                                          type: benne.type,
+                                          client: benne.client,
+                                          fullness: 0,
+                                          location: benne.location,
+                                          emptying: false,
+                                        ));
                                       },
                                     ),
                                   ],

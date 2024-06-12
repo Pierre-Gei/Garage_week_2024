@@ -5,6 +5,8 @@ class Benne{
   final String location;
   final String client;
   final bool emptying;
+  final String? emptyingDate;
+  final String? lastUpdate;
 
   Benne({
     required this.id,
@@ -13,5 +15,7 @@ class Benne{
     required this.location,
     required this.client,
     required this.emptying,
+    this.emptyingDate,
+    this.lastUpdate,
   });
 }
