@@ -9,7 +9,8 @@ void main() {
 }
 
 class ClientScreen extends StatelessWidget {
-  const ClientScreen({super.key});
+  const ClientScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,18 +24,16 @@ class ClientScreen extends StatelessWidget {
 }
 
 class ClientInfo extends StatelessWidget {
-  const ClientInfo({super.key});
+  const ClientInfo({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final String ClientName;
-    List<Benne> Bennes;
-    Bennes = [
-      Benne(id: '1xzj', type: 'Verre', client: 'Michel', fullness: 0.5, location: 'Toulon'),
-      Benne(id: '2xjz', type: 'Plastique', client: 'Michel', fullness: 0.8, location: 'Toulon'),
-      Benne(id: '3xjz', type: 'Papier', client: 'Michel', fullness: 0.2, location: 'Toulon'),
+    final String ClientName = 'Michel';
+    final List<Benne> Bennes = [
+      Benne(id: '1xzj', type: 'Verre', client: 'Michel', fullness: 0.5, location: 'Toulon', emptying: false),
+      Benne(id: '2xjz', type: 'Plastique', client: 'Michel', fullness: 0.8, location: 'Toulon', emptying: true),
+      Benne(id: '3xjz', type: 'Papier', client: 'Michel', fullness: 0.2, location: 'Toulon', emptying: false),
     ];
-    ClientName = 'Michel';
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 198, 222, 226),
@@ -71,35 +70,79 @@ class ClientInfo extends StatelessWidget {
             ),
             const Text('Mes bennes : ', style: TextStyle(fontSize: 25)),
             Expanded(
-                child: ListView(
-                  children:  [
-                    if (Bennes.isEmpty)
-                      const Center(
-                        child: Text('Aucune benne', style: TextStyle(fontSize: 20)),
-                      )
-                    else
-                      Column(
-                        children: Bennes.map((benne) {
-                          return ListTile(
-                            title: Text('Benne n°${benne.id}, ${benne.type} à ${benne.location}'),
-                            subtitle:
-                                Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    LinearProgressIndicator(value: benne.fullness, minHeight: 20, borderRadius: BorderRadius.circular(10), backgroundColor: Colors.grey, valueColor: AlwaysStoppedAnimation<Color>(Colors.green)),
-                                    Text('${(benne.fullness * 100).toStringAsFixed(1)}%', style: TextStyle(color: Colors.white)),
+              child: Bennes.isEmpty
+                  ? const Center(
+                child: Text('Aucune benne', style: TextStyle(fontSize: 20)),
+              )
+                  : ListView(
+                children: Bennes.map((benne) {
+                  return InkWell(
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        showDragHandle: true,
+                        builder: (context) {
+                          return LayoutBuilder(
+                            builder: (BuildContext context, BoxConstraints constraints) {
+                              return Container(
+                                width: constraints.maxWidth,
+                                padding: EdgeInsets.all(16),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text('Benne ID: ${benne.id}'),
+                                    Text('Type: ${benne.type}'),
+                                    Text('Emplacement: ${benne.location}'),
+                                    Text('Taux de remplssage: ${(benne.fullness * 100).toStringAsFixed(1)}%'),
+                                    Text('Client: ${benne.client}'),
+                                    Text('Vidage prévu: ${benne.emptying ? 'Oui' : 'Non'}'),
+                                    ElevatedButton(
+                                      child: Text('Demander le vidage'),
+                                      onPressed: () {
+                                        //TODO: Empty the bin
+                                      },
+                                    ),
                                   ],
                                 ),
+                              );
+                            },
                           );
-                        }).toList(),
+                        },
+                      );
+                    },
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Text('Benne n°${benne.id}, ${benne.type} à ${benne.location}'),
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                LinearProgressIndicator(
+                                  value: benne.fullness,
+                                  minHeight: 20,
+                                  borderRadius: BorderRadius.circular(10),
+                                  backgroundColor: Colors.grey,
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                                ),
+                                Text(
+                                  '${(benne.fullness * 100).toStringAsFixed(1)}%',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                  ],
-                ),
-            ),
-          ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),          ],
         ),
       ),
     );
-    throw UnimplementedError();
   }
 }

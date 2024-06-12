@@ -4,6 +4,7 @@ class Benne{
   final String type;
   final String location;
   final String client;
+  final bool emptying;
 
   Benne({
     required this.id,
@@ -11,5 +12,6 @@ class Benne{
     required this.type,
     required this.location,
     required this.client,
+    required this.emptying,
   });
 }
