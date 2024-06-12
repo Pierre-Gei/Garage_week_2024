@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:garage_week_2024/screens/profile_select_screen/profile_select_screen.dart';
+
+import '../login_screen/login_screen.dart';
 
 void main() {
   runApp(const ChauffeurScreen());
@@ -209,7 +212,7 @@ class _ChauffeurInfoState extends State<ChauffeurInfo> {
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                  MaterialPageRoute(builder: (context) => const ProfileSelectScreen()),
                 );
               },
             ),
@@ -294,128 +297,6 @@ class _ChauffeurInfoState extends State<ChauffeurInfo> {
         onPressed: _showAddBinBottomSheet,
         tooltip: 'Ajouter',
         child: const Icon(Icons.add),
-      ),
-    );
-  }
-}
-
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
-
-  void _navigateToLogin(BuildContext context, String userType) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => UserLoginPage(userType: userType),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Connexion'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Choisissez votre type de connexion:',
-              style: TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                _navigateToLogin(context, 'Entreprise');
-              },
-              child: const Text('Entreprise'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                _navigateToLogin(context, 'Chauffeur');
-              },
-              child: const Text('Chauffeur'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                _navigateToLogin(context, 'Veolia');
-              },
-              child: const Text('Veolia'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class UserLoginPage extends StatelessWidget {
-  final String userType;
-
-  const UserLoginPage({required this.userType, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Connexion $userType'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              decoration: const InputDecoration(
-                labelText: 'Nom d\'utilisateur',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              decoration: const InputDecoration(
-                labelText: 'Mot de passe',
-                border: OutlineInputBorder(),
-              ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Action de connexion
-              },
-              child: const Text('Connexion'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
