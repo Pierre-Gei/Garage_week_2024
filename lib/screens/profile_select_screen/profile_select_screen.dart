@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:garage_week_2024/screens/chauffeur_screen/chauffeur_screen.dart';
 import '/screens/client_screen/client_screen.dart';
 
 void main() {
@@ -48,7 +49,10 @@ class ProfileSelect extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                // Navigate to the driver screen
+                debugPrint('Chauffeur');
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const ChauffeurScreen()),
+                );
               },
               child: const Text('Chauffeur'),
             ),
