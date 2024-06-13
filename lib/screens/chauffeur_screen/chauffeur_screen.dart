@@ -12,7 +12,7 @@ class ChauffeurScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Gestion des Bennes',
+      title: 'Gestion des bennes',
       theme: ThemeData(
         primarySwatch: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -90,7 +90,8 @@ Future<void> _addNewBin(
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  // Action pour afficher les informations de la benne
+                  // Show the bin info
+                  
                   Navigator.pop(context);
                 },
                 child: const Text('Info'),
@@ -158,7 +159,7 @@ Future<void> _addNewBin(
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text(
-                'Ajouter une Benne',
+                'Ajouter une benne',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
@@ -180,7 +181,7 @@ Future<void> _addNewBin(
               const SizedBox(height: 10),
               TextField(
                 decoration: const InputDecoration(
-                  labelText: 'Numéro de la Benne',
+                  labelText: 'Numéro de la benne',
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) {
@@ -278,7 +279,20 @@ Future<void> _addNewBin(
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gestion des Bennes'),
+        backgroundColor: const Color.fromARGB(255, 198, 222, 226),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (context) => const ProfileSelectScreen()),
+            );
+          },
+        ),
+        title: Center(
+          child: Image.asset('lib/assets/icons/BinTech_Logo.jpg',
+              height: 50, width: 50, fit: BoxFit.cover),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -292,6 +306,10 @@ Future<void> _addNewBin(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            const Text(
+              'Liste des bennes',
+              style: TextStyle(fontSize: 25),
+            ),
             const SizedBox(height: 20),
             Expanded(
               child: ListView(
@@ -302,7 +320,7 @@ Future<void> _addNewBin(
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         child: Text(
-                          entry.key,
+                          entry.key.toUpperCase(),
                           style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
@@ -315,7 +333,7 @@ Future<void> _addNewBin(
                             ),
                             margin: const EdgeInsets.symmetric(vertical: 5),
                             child: ListTile(
-                              title: Text(bin.id),
+                              title: Text('Benne n° ${bin.id}'),
                               trailing: Text('${(bin.fullness * 100)}%'),
                               onTap: () async {
                                 _showBinOptions(
@@ -341,6 +359,7 @@ Future<void> _addNewBin(
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddBinBottomSheet,
+
         tooltip: 'Ajouter',
         child: const Icon(Icons.add),
       ),
