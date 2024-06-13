@@ -88,8 +88,8 @@ Future<Entreprise> getEntrepriseById(String id) async {
 
   Future<Entreprise> getEntreprise(String nom) async {
     QuerySnapshot querySnapshot = await _entrepriseCollection.where('nom', isEqualTo: nom).get();
-    List<Benne> listBenne = querySnapshot.docs[0]['listBenne'].map((benne) => Benne.fromJson(benne)).toList();  // Convert each Map<String, dynamic> to Benne
-    Entreprise entreprise = Entreprise(
+    List<dynamic> listBenneDynamic = querySnapshot.docs[0]['listBenne'];
+    List<Benne> listBenne = listBenneDynamic.map((benne) => Benne.fromJson(benne)).toList();    Entreprise entreprise = Entreprise(
       id: querySnapshot.docs[0].id,
       nom: querySnapshot.docs[0]['nom'],
       adresse: querySnapshot.docs[0]['adresse'],
