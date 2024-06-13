@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:garage_week_2024/services/userServices.dart';
+
+import '../chauffeur_screen/chauffeur_screen.dart';
+import '../client_screen/client_screen.dart';
 
 void main() {
-  runApp(const UserLoginPage(userType: 'client'));
+  runApp(UserLoginPage(userType: 'client'));
 }
 
 class UserLoginPage extends StatelessWidget {
   final String userType;
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
 
-  const UserLoginPage({required this.userType, super.key});
+  UserLoginPage({required this.userType, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +27,7 @@ class UserLoginPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
+              controller: usernameController,
               decoration: const InputDecoration(
                 labelText: 'Nom d\'utilisateur',
                 border: OutlineInputBorder(),
@@ -28,6 +35,7 @@ class UserLoginPage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             TextField(
+              controller: passwordController,
               decoration: const InputDecoration(
                 labelText: 'Mot de passe',
                 border: OutlineInputBorder(),
@@ -36,8 +44,34 @@ class UserLoginPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                // Action de connexion
+              onPressed: () async {
+                String username = usernameController.text;
+                String password = passwordController.text;
+                bool userExists = await UserServices().checkUser(username, password, userType);
+                print('User exists: $userExists');
+                if (userExists) {
+                  if (userType == 'client') {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const ClientScreen(),
+                      ),
+                    );
+                  } else if (userType == 'chauffeur') {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const ChauffeurScreen(),
+                      ),
+                    );
+                  } else {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => UserLoginPage(userType: 'client'),
+                      ),
+                    );
+                  }
+                } else {
+                  // Handle the case when the user does not exist
+                }
               },
               child: const Text('Connexion'),
               style: ElevatedButton.styleFrom(

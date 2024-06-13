@@ -49,27 +49,23 @@ class ProfileSelect extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                debugPrint('Client');
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const ClientScreen()),
-                );
+                debugPrint('client');
+                const ProfileSelectScreen()._navigateToLogin(context, 'client');
               },
-              child: const Text('Client'),
+              child: const Text('client'),
             ),
             ElevatedButton(
               onPressed: () {
-                debugPrint('Chauffeur');
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const ChauffeurScreen()),
-                );
+                debugPrint('chauffeur');
+                const ProfileSelectScreen()._navigateToLogin(context, 'chauffeur');
               },
-              child: const Text('Chauffeur'),
+              child: const Text('chauffeur'),
             ),
             ElevatedButton(
               onPressed: () {
                 // Navigate to the véolia screen
               },
-              child: const Text('Véolia'),
+              child: const Text('véolia'),
             ),
           ],
         ),
