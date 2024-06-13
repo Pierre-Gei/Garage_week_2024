@@ -6,7 +6,6 @@ import '../../models/benneModel.dart';
 import '../../models/userModel.dart';
 import '../../services/entrepriseServices.dart';
 import '../profile_select_screen/profile_select_screen.dart';
-import '../../services/benneServices.dart';
 
 class ClientScreen extends StatelessWidget {
   final User user;
@@ -116,16 +115,7 @@ class ClientInfo extends StatelessWidget {
                                                   child: Text(
                                                       'Demander le vidage'),
                                                   onPressed: () {
-                                                    //TODO: Empty the bin
-                                                    benneServices()
-                                                        .addBenne(Benne(
-                                                      id: benne.id,
-                                                      type: benne.type,
-                                                      client: benne.client,
-                                                      fullness: 0,
-                                                      location: benne.location,
-                                                      emptying: false,
-                                                    ));
+                                                    //TODO make a date picker for the emptying date and update the database
                                                   },
                                                 ),
                                               ],

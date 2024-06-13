@@ -103,14 +103,38 @@ Future<Entreprise> getEntrepriseById(String id) async {
     QuerySnapshot querySnapshot = await _entrepriseCollection.get();
     List<Entreprise> listEntreprise = [];
     querySnapshot.docs.forEach((doc) {
+      List<dynamic> listBenneDynamic = doc['listBenne'];
+      List<Benne> listBenne = listBenneDynamic.map((benne) => Benne.fromJson(benne)).toList();
       listEntreprise.add(Entreprise(
         id: doc.id,
         nom: doc['nom'],
         adresse: doc['adresse'],
         ville: doc['ville'],
-        listBenne: doc['listBenne'],
+        listBenne: listBenne,
       ));
     });
     return listEntreprise;
+  }
+
+Future<List<Benne>> getAllBenne() async {
+  QuerySnapshot querySnapshot = await _entrepriseCollection.get();
+  List<Benne> listBenne = [];
+  querySnapshot.docs.forEach((doc) {
+    List<dynamic> listBenneDynamic = doc['listBenne'];
+    listBenne.addAll(listBenneDynamic.map((benne) => Benne.fromJson(benne)).toList());
+  });
+  return listBenne;
+}
+
+  Future<void> addBenneToEntreprise(String entrepriseId, Benne benne) {
+    return _entrepriseCollection.doc(entrepriseId).update({
+      'listBenne': FieldValue.arrayUnion([benne.toJson()]),
+    });
+  }
+
+  Future<void> updateBenneFromEntreprise(String entrepriseId, Benne benne) {
+    return _entrepriseCollection.doc(entrepriseId).update({
+      'listBenne': FieldValue.arrayUnion([benne.toJson()]),
+    });
   }
 }

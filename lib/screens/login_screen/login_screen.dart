@@ -49,6 +49,9 @@ class UserLoginPage extends StatelessWidget {
                 String username = usernameController.text;
                 String password = passwordController.text;
                 bool userExists = await UserServices().checkUser(username, password, userType);
+                print('Username: $username');
+                print('Password: $password');
+                print('User type: $userType');
                 print('User exists: $userExists');
                 User user = await UserServices().getUser(username);
                 if (userExists) {
@@ -61,7 +64,7 @@ class UserLoginPage extends StatelessWidget {
                   } else if (userType == 'chauffeur') {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
-                        builder: (context) => const ChauffeurScreen(),
+                        builder: (context) => ChauffeurScreen(user : user),
                       ),
                     );
                   } else {

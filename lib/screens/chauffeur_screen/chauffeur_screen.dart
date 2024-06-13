@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:garage_week_2024/models/entrepriseModel.dart';
+import 'package:garage_week_2024/models/userModel.dart';
 import 'package:garage_week_2024/screens/profile_select_screen/profile_select_screen.dart';
-
+import '../../models/benneModel.dart';
+import '../../services/entrepriseServices.dart';
 import '../login_screen/login_screen.dart';
 
-void main() {
-  runApp(const ChauffeurScreen());
-}
-
 class ChauffeurScreen extends StatelessWidget {
-  const ChauffeurScreen({super.key});
+  const ChauffeurScreen({super.key, required User user});
 
   @override
   Widget build(BuildContext context) {
@@ -32,33 +31,36 @@ class ChauffeurInfo extends StatefulWidget {
 }
 
 class _ChauffeurInfoState extends State<ChauffeurInfo> {
-  final List<Map<String, dynamic>> _bins = [
-    {'location': 'Toulon', 'name': 'Benne X2247B', 'fillLevel': 80},
-    {'location': 'Toulon', 'name': 'Benne 12UX7', 'fillLevel': 40},
-    {'location': 'La valette', 'name': 'Benne 26VGD', 'fillLevel': 60},
-    {'location': 'La valette', 'name': 'Benne 72A8X', 'fillLevel': 90},
-  ];
+  Future<List<Benne>> _bins;
+  Future<List<Entreprise>> _companies;
 
-  final List<String> _companies = [
-    'Company A',
-    'Company B',
-    'Company C',
-    'Company D',
-  ];
+  _ChauffeurInfoState()
+      : _bins = EntrepriseServices().getAllBenne(),
+        _companies = EntrepriseServices().getAllEntreprise();
 
-  void _addNewBin(String location, String name, int fillLevel) {
-    setState(() {
-      _bins.add({'location': location, 'name': name, 'fillLevel': fillLevel});
-    });
+  Future<void> _addNewBin(
+      String type, String id, double fullness, Entreprise entreprise) async {
+    Benne newBin = Benne(
+      id: id,
+      type: type,
+      fullness: fullness,
+      location: entreprise.ville,
+      client: entreprise.nom,
+      emptying: false,
+      lastUpdate: DateTime.now().toIso8601String(),
+    );
+    List<Benne> bins = await _bins;
+    bins.add(newBin);
+    EntrepriseServices().addBenneToEntreprise(entreprise.id, newBin);
   }
 
-  void _removeBin(int index) {
-    setState(() {
-      _bins.removeAt(index);
-    });
+  Future<void> _removeBin(int index) async {
+    List<Benne> bins = await _bins;
+    bins.removeAt(index);
   }
 
-  void _showBinOptions(BuildContext context, String binName, String location, int fillLevel) {
+  void _showBinOptions(BuildContext context, String binId, String location,
+      int fillLevel, Entreprise entreprise, additionalArgument) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -68,8 +70,9 @@ class _ChauffeurInfoState extends State<ChauffeurInfo> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Options pour $binName',
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                'Options pour $binId',
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -79,7 +82,8 @@ class _ChauffeurInfoState extends State<ChauffeurInfo> {
                 },
                 child: const Text('Info'),
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 12.0, horizontal: 24.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -87,14 +91,24 @@ class _ChauffeurInfoState extends State<ChauffeurInfo> {
               ),
               const SizedBox(height: 10),
               ElevatedButton(
-                onPressed: () {
-                  final index = _bins.indexWhere((bin) => bin['name'] == binName && bin['location'] == location);
-                  _removeBin(index);
+                onPressed: () async {
+                  // Find the index of the bin in the _bins list
+                  int index = (await _bins).indexWhere(
+                      (bin) => bin.id == binId && bin.location == location);
+
+                  // Remove the bin from the _bins list
+                  _bins.then((bins) => bins.removeAt(index));
+
+                  // Remove the bin from the database
+                  EntrepriseServices()
+                      .removeBenneFromEntreprise(entreprise.id, binId);
+
                   Navigator.pop(context);
                 },
                 child: const Text('Récupérer'),
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 12.0, horizontal: 24.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -110,6 +124,7 @@ class _ChauffeurInfoState extends State<ChauffeurInfo> {
   Future<void> _showAddBinBottomSheet() async {
     String selectedCompany = '';
     String binNumber = '';
+    String binType = '';
     int fillLevel = 0;
 
     await showModalBottomSheet(
@@ -134,19 +149,27 @@ class _ChauffeurInfoState extends State<ChauffeurInfo> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'Entreprise',
-                  border: OutlineInputBorder(),
-                ),
-                items: _companies.map((String company) {
-                  return DropdownMenuItem<String>(
-                    value: company,
-                    child: Text(company),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  selectedCompany = value!;
+              FutureBuilder<List<Entreprise>>(
+                future: _companies,
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<Entreprise>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return DropdownButtonFormField<String>(
+                      items: snapshot.data!.map((company) {
+                        return DropdownMenuItem(
+                          value: company.nom,
+                          child: Text(company.nom),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        selectedCompany = newValue!;
+                      },
+                    );
+                  }
                 },
               ),
               const SizedBox(height: 10),
@@ -162,6 +185,16 @@ class _ChauffeurInfoState extends State<ChauffeurInfo> {
               const SizedBox(height: 10),
               TextField(
                 decoration: const InputDecoration(
+                  labelText: 'Type de déchets',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  binType = value;
+                },
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                decoration: const InputDecoration(
                   labelText: 'Niveau de remplissage (%)',
                   border: OutlineInputBorder(),
                 ),
@@ -172,15 +205,20 @@ class _ChauffeurInfoState extends State<ChauffeurInfo> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (selectedCompany.isNotEmpty && binNumber.isNotEmpty) {
-                    _addNewBin(selectedCompany, binNumber, fillLevel);
+                    Entreprise selectedEntreprise = await _companies.then(
+                        (companies) => companies.firstWhere(
+                            (company) => company.nom == selectedCompany));
+                    _addNewBin(binType, binNumber, fillLevel.toDouble(),
+                        selectedEntreprise);
                     Navigator.of(context).pop();
                   }
                 },
                 child: const Text('Valider'),
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 12.0, horizontal: 24.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -212,7 +250,8 @@ class _ChauffeurInfoState extends State<ChauffeurInfo> {
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const ProfileSelectScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const ProfileSelectScreen()),
                 );
               },
             ),
@@ -225,15 +264,14 @@ class _ChauffeurInfoState extends State<ChauffeurInfo> {
   @override
   Widget build(BuildContext context) {
     // Regroupement et tri des bennes par niveau de remplissage
-    final Map<String, List<Map<String, dynamic>>> binsByCity = {};
-    for (var bin in _bins) {
-      if (!binsByCity.containsKey(bin['location'])) {
-        binsByCity[bin['location']] = [];
-      }
-      binsByCity[bin['location']]!.add(bin);
-    }
-    binsByCity.forEach((key, value) {
-      value.sort((a, b) => b['fillLevel'].compareTo(a['fillLevel']));
+    final Map<String, List<Benne>> binsByCity = {};
+    _bins.then((bins) {
+      bins.forEach((bin) {
+        if (!binsByCity.containsKey(bin.location)) {
+          binsByCity[bin.location] = [];
+        }
+        binsByCity[bin.location]?.add(bin);
+      });
     });
 
     return Scaffold(
@@ -264,8 +302,7 @@ class _ChauffeurInfoState extends State<ChauffeurInfo> {
                         child: Text(
                           entry.key,
                           style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
                       Column(
@@ -276,10 +313,18 @@ class _ChauffeurInfoState extends State<ChauffeurInfo> {
                             ),
                             margin: const EdgeInsets.symmetric(vertical: 5),
                             child: ListTile(
-                              title: Text(bin['name']),
-                              trailing: Text('${bin['fillLevel']}%'),
+                              title: Text(bin.id),
+                              trailing: Text('${bin.fullness}%'),
                               onTap: () {
-                                _showBinOptions(context, bin['name'], bin['location'], bin['fillLevel']);
+                                _showBinOptions(
+                                    context,
+                                    bin.id,
+                                    bin.location,
+                                    bin.fullness.toInt(),
+                                    EntrepriseServices()
+                                            .getEntreprise(bin.client)
+                                        as Entreprise,
+                                    null);
                               },
                             ),
                           );

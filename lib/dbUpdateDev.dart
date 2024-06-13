@@ -41,4 +41,13 @@ void addUserToDatabase() async {
       ),
     ],
   ));
+  await userServices.addUser(User(
+    id: '2',
+    login : 'driver1',
+    password : 'driver1',
+    nom : 'Michel',
+    ville : 'Toulon',
+    role : 'chauffeur',
+    entrepriseId : 'NA',
+  ));
 }
