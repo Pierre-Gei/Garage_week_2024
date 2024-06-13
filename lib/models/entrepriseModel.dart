@@ -5,7 +5,7 @@ class Entreprise{
   final String nom;
   final String adresse;
   final String ville;
-  final Benne listBenne;
+  final List<Benne> listBenne;
 
   Entreprise({
     required this.id,
@@ -14,4 +14,6 @@ class Entreprise{
     required this.ville,
     required this.listBenne,
   });
+
+  List<Benne> get bennes => listBenne;
 }

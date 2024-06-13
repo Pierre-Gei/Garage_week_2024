@@ -5,6 +5,7 @@ class User{
   final String nom;
   final String ville;
   final String role;
+  final String entrepriseId;
 
   User({
     required this.id,
@@ -13,5 +14,6 @@ class User{
     required this.nom,
     required this.ville,
     required this.role,
+    required this.entrepriseId,
   });
 }

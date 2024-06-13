@@ -5,16 +5,17 @@ class UserServices {
   final CollectionReference _userCollection = FirebaseFirestore.instance.collection('users');
 
   Future<void> addUser(User user) {
-    return _userCollection.add({
+    return _userCollection.doc(user.id).set({
       'id': user.id,
       'login': user.login,
       'password': user.password,
       'nom': user.nom,
       'ville': user.ville,
       'role': user.role,
+      'entrepriseId': user.entrepriseId,
     })
-        .then((value) => print("User Added"))
-        .catchError((error) => print("Failed to add user: $error"));
+    .then((value) => print('User added'))
+    .catchError((error) => print('Failed to add user: $error'));
   }
 
   Future<void> updateUser(User user) {
@@ -24,11 +25,16 @@ class UserServices {
       'nom': user.nom,
       'ville': user.ville,
       'role': user.role,
-    });
+      'entrepriseId': user.entrepriseId,
+    })
+    .then((value) => print('User updated'))
+    .catchError((error) => print('Failed to update user: $error'));
   }
 
   Future<void> deleteUser(String id) {
-    return _userCollection.doc(id).delete();
+    return _userCollection.doc(id).delete()
+    .then((value) => print('User deleted'))
+    .catchError((error) => print('Failed to delete user: $error'));
   }
 
   Future<void> deleteAllUser() {
@@ -47,16 +53,18 @@ class UserServices {
     });
   }
 
-  Future<User> getUser(String id) async {
-    DocumentSnapshot documentSnapshot = await _userCollection.doc(id).get();
-    return User(
-      id: documentSnapshot.id,
-      login: documentSnapshot['login'],
-      password: documentSnapshot['password'],
-      nom: documentSnapshot['nom'],
-      ville: documentSnapshot['ville'],
-      role: documentSnapshot['role'],
+  Future<User> getUser(String login) async {
+    QuerySnapshot querySnapshot = await _userCollection.where('login', isEqualTo: login).get();
+    User user = User(
+      id: querySnapshot.docs[0].id,
+      login: querySnapshot.docs[0]['login'],
+      password: querySnapshot.docs[0]['password'],
+      nom: querySnapshot.docs[0]['nom'],
+      ville: querySnapshot.docs[0]['ville'],
+      role: querySnapshot.docs[0]['role'],
+      entrepriseId: querySnapshot.docs[0]['entrepriseId'],
     );
+    return user;
   }
 
   Future<List<User>> getAllUser() async {
@@ -70,6 +78,7 @@ class UserServices {
         nom: doc['nom'],
         ville: doc['ville'],
         role: doc['role'],
+        entrepriseId: doc['entrepriseId'],
       ));
     });
     return users;

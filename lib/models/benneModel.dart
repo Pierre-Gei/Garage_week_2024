@@ -18,4 +18,30 @@ class Benne{
     this.emptyingDate,
     this.lastUpdate,
   });
+
+  factory Benne.fromJson(Map<String, dynamic> json) {
+    return Benne(
+      id: json['id'],
+      fullness: json['fullness'],
+      type: json['type'],
+      location: json['location'],
+      client: json['client'],
+      emptying: json['emptying'],
+      emptyingDate: json['emptyingDate'],
+      lastUpdate: json['lastUpdate'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'fullness': fullness,
+      'type': type,
+      'location': location,
+      'client': client,
+      'emptying': emptying,
+      'emptyingDate': emptyingDate,
+      'lastUpdate': lastUpdate,
+    };
+  }
 }

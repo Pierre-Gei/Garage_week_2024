@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:garage_week_2024/services/userServices.dart';
+import '../../models/userModel.dart';
 
 import '../chauffeur_screen/chauffeur_screen.dart';
 import '../client_screen/client_screen.dart';
@@ -49,11 +50,12 @@ class UserLoginPage extends StatelessWidget {
                 String password = passwordController.text;
                 bool userExists = await UserServices().checkUser(username, password, userType);
                 print('User exists: $userExists');
+                User user = await UserServices().getUser(username);
                 if (userExists) {
                   if (userType == 'client') {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
-                        builder: (context) => const ClientScreen(),
+                        builder: (context) => ClientScreen(user: user),
                       ),
                     );
                   } else if (userType == 'chauffeur') {
