@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:garage_week_2024/models/entrepriseModel.dart';
 import 'package:garage_week_2024/widgets/_confirmLogout.dart';
+import 'package:garage_week_2024/models/userModel.dart';
+import 'package:garage_week_2024/screens/BT_device_connect_screen/bt_device_connect_screen.dart';
+import 'package:garage_week_2024/services/entrepriseServices.dart';
 
 import '../../models/benneModel.dart';
-import '../../models/userModel.dart';
-import '../../services/entrepriseServices.dart';
-import '../profile_select_screen/profile_select_screen.dart';
+
 
 class ClientScreen extends StatelessWidget {
   final User user;
@@ -53,9 +54,14 @@ class ClientInfo extends StatelessWidget {
               ),
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.person),
+                  icon: const Icon(Icons.bluetooth),
                   onPressed: () {
-                    // Navigate to the settings screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BtDeviceConnectScreen(),
+                      ),
+                    );
                   },
                 ),
               ],

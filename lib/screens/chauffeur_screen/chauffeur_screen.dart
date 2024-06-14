@@ -244,7 +244,9 @@ Future<void> _addNewBin(
           child: Image.asset('lib/assets/icons/BinTech_Logo.jpg',
               height: 50, width: 50, fit: BoxFit.cover),
         ),
-        actions: []
+        actions: [
+          SizedBox(width: 57),
+        ]
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
