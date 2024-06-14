@@ -1,48 +1,148 @@
+import 'dart:async';
 import 'dart:convert';
-
+import 'package:flutter/services.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
-class btService {
-  static FlutterBluetoothSerial _bluetooth = FlutterBluetoothSerial.instance;
+class BtService {
+  BtService._privateConstructor();
+  static final BtService _instance = BtService._privateConstructor();
+  factory BtService() {
+    return _instance;
+  }
+
+  final StreamController<bool> _bluetoothStateController =
+  StreamController<bool>.broadcast();
+
+  Stream<bool> get bluetoothState => _bluetoothStateController.stream;
+
+  static final FlutterBluetoothSerial _bluetooth =
+      FlutterBluetoothSerial.instance;
   static BluetoothConnection? _connection;
   static List<BluetoothDevice> _devicesList = [];
   static BluetoothDevice? _device;
 
-  static Future<void> init() async {
-    // Initialize the phone bluetooth device
-    await _bluetooth.requestEnable();
+  static final StreamController<BluetoothDevice> _connectedDeviceController =
+  StreamController<BluetoothDevice>.broadcast();
+
+  Stream<BluetoothDevice> get connectedDevice =>
+      _connectedDeviceController.stream;
+
+  Future<void> initBluetooth() async {
+    bool? initialState = await getsBluetoothState();
+    _bluetoothStateController.add(initialState ?? false);
+
+    _bluetooth.onStateChanged().listen((BluetoothState state) {
+      _bluetoothStateController.add(state == BluetoothState.STATE_ON);
+    });
   }
 
-  static Future<void> scan() async {
-    // Scan for bluetooth devices
-    _devicesList = await _bluetooth.getBondedDevices();
+  static Future<bool?> getsBluetoothState() async {
+    return await _bluetooth.isEnabled;
+  }
+
+  Future<void> changeBluetoothState(bool enable) async {
+    if (enable) {
+      await _bluetooth.requestEnable();
+    } else {
+      await _bluetooth.requestDisable();
+    }
+    bool? newState = await getsBluetoothState();
+    _bluetoothStateController.add(newState ?? false);
+  }
+
+  static Stream<List<BluetoothDevice>> scan() async* {
+    bool isDiscovering = true;
+    do {
+      // Stop any ongoing scan
+      await _bluetooth.cancelDiscovery();
+
+      _devicesList = [];
+      yield* _bluetooth.startDiscovery().map((result) {
+        if (result.device.name != null && result.device.name!.isNotEmpty) {
+          _devicesList.add(result.device);
+        }
+        return _devicesList;
+      });
+
+      isDiscovering = (await _bluetooth.isDiscovering)!;
+    } while (isDiscovering);
+    isDiscovering = false;
+    print('Scanning done');
+  }
+
+  List<BluetoothDevice> getDevicesList() {
+    return _devicesList;
   }
 
   static Future<void> connect(BluetoothDevice device) async {
-    // Connect to the bluetooth device
-    _connection = await BluetoothConnection.toAddress(device.address);
-    _device = device;
+    try {
+      _connection = await BluetoothConnection.toAddress(device.address);
+      _device = device;
+      _connectedDeviceController.add(device);
+    } catch (e) {
+      if (e is PlatformException) {
+        print('Failed to connect: ${e.message}');
+        // Handle the exception, e.g., by showing an error message to the user
+      } else {
+        rethrow;
+      }
+    }
   }
 
   static Future<void> disconnect() async {
-    // Disconnect from the bluetooth device
     await _connection?.close();
     _connection = null;
     _device = null;
   }
 
   static Future<void> send(String data) async {
-    // Send data to the bluetooth device
     _connection?.output.add(utf8.encode(data + "\r\n"));
     await _connection?.output.allSent;
   }
 
-  static Future<void> receive() async {
-    // Receive data from the bluetooth device
-    _connection?.input?.listen((data) {
-      print('Received: ${utf8.decode(data)}');
-    }).onDone(() {
-      print('Disconnected by remote request');
-    });
+  Stream<Map<String, String>> get receiveData {
+  return _connection?.input?.transform(
+    StreamTransformer.fromHandlers(
+      handleData: (Uint8List data, EventSink<Map<String, String>> sink) {
+        // Decode the incoming data
+        final String incomingData = utf8.decode(data);
+        print('Incoming data: $incomingData');
+
+        // Parse the incoming data
+        Map<String, String> parsedData = parseArduinoData(incomingData);
+
+        // Add the parsed data to the sink
+        sink.add(parsedData);
+      },
+    ),
+  ) ?? Stream.empty();
+}
+
+  Map<String, String> parseArduinoData(String data) {
+    final serialNumberRegex = RegExp(r'Numéro de série: (\w+),');
+    final fillRateRegex = RegExp(r'Taux de remplissage: (\d+)%');
+
+    final serialNumberMatch = serialNumberRegex.firstMatch(data);
+    final fillRateMatch = fillRateRegex.firstMatch(data);
+
+    String serialNumber = serialNumberMatch?.group(1) ?? '';
+    String fillRate = fillRateMatch?.group(1) ?? '';
+
+    return {
+      'serialNumber': serialNumber,
+      'fillRate': fillRate,
+    };
+  }
+
+  Future<String> getBluetoothDeviceSerial() async {
+    return receiveData.first.then((data) => data['serialNumber'] ?? '');
+  }
+
+  void dispose() {
+    _bluetoothStateController.close();
+  }
+
+  Future<String> getBluetoothTauxRemplissage() async {
+    return receiveData.first.then((data) => data['fillRate'] ?? '');
   }
 }

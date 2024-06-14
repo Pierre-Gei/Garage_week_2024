@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:garage_week_2024/screens/veolia_screen/veolia_screen.dart';
 import 'package:garage_week_2024/services/userServices.dart';
 import '../../models/userModel.dart';
 
@@ -68,7 +69,14 @@ class UserLoginPage extends StatelessWidget {
                         builder: (context) => ChauffeurScreen(user: user),
                       ),
                     );
-                  } else {
+                  } else if (userType == 'veolia') {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => Veolia_screen(user: user),
+                      ),
+                    );
+                  }
+                  else {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) => UserLoginPage(userType: 'client'),

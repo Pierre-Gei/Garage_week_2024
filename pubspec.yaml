@@ -34,6 +34,12 @@ dependencies:
   firebase_core : ^3.1.0
   cloud_firestore: ^5.0.1
   flutter_bluetooth_serial : ^0.4.0
+  syncfusion_flutter_datagrid: ^26.1.35
+  permission_handler: ^8.1.4+2
+  path_provider: ^2.0.2
+  csv: ^5.0.0
+  fl_chart: ^0.36.0
+  time_planner: ^0.1.2+1
 
 dev_dependencies:
   flutter_test:

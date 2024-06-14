@@ -63,7 +63,8 @@ class ProfileSelect extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                // Navigate to the véolia screen
+                debugPrint('véolia');
+                const ProfileSelectScreen()._navigateToLogin(context, 'véolia');
               },
               child: const Text('véolia'),
             ),

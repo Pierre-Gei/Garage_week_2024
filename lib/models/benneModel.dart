@@ -7,6 +7,7 @@ class Benne{
   final bool emptying;
   final String? emptyingDate;
   final String? lastUpdate;
+  final String? BluetoothDeviceSerial;
 
   Benne({
     required this.id,
@@ -17,6 +18,7 @@ class Benne{
     required this.emptying,
     this.emptyingDate,
     this.lastUpdate,
+    this.BluetoothDeviceSerial,
   });
 
   factory Benne.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class Benne{
       emptying: json['emptying'],
       emptyingDate: json['emptyingDate'],
       lastUpdate: json['lastUpdate'],
+      BluetoothDeviceSerial: json['BluetoothDeviceSerial'],
     );
   }
 
@@ -42,6 +45,7 @@ class Benne{
       'emptying': emptying,
       'emptyingDate': emptyingDate,
       'lastUpdate': lastUpdate,
+      'BluetoothDeviceSerial': BluetoothDeviceSerial,
     };
   }
 }
