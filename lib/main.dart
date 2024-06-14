@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'ENT ISEN Toulon',
+        title: 'BinTech APP',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
           primarySwatch: Colors.red,

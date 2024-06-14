@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:garage_week_2024/models/entrepriseModel.dart';
+import 'package:garage_week_2024/widgets/_confirmLogout.dart';
 
 import '../../models/benneModel.dart';
 import '../../models/userModel.dart';
@@ -45,15 +46,7 @@ class ClientInfo extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               backgroundColor: const Color.fromARGB(255, 198, 222, 226),
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => const ProfileSelectScreen()),
-                  );
-                },
-              ),
+              leading: const ConfirmLogout(),
               title: Center(
                 child: Image.asset('lib/assets/icons/BinTech_Logo.jpg',
                     height: 50, width: 50, fit: BoxFit.cover),

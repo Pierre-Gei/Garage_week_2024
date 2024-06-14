@@ -4,10 +4,11 @@ import 'package:garage_week_2024/models/userModel.dart';
 import 'package:garage_week_2024/screens/profile_select_screen/profile_select_screen.dart';
 import '../../models/benneModel.dart';
 import '../../services/entrepriseServices.dart';
+import '../../widgets/_confirmLogout.dart';
 import '../login_screen/login_screen.dart';
 
 class ChauffeurScreen extends StatelessWidget {
-  const ChauffeurScreen({super.key, required User user});
+  const ChauffeurScreen({Key? key, required User user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class ChauffeurScreen extends StatelessWidget {
 }
 
 class ChauffeurInfo extends StatefulWidget {
-  const ChauffeurInfo({super.key});
+  const ChauffeurInfo({Key? key}) : super(key: key);
 
   @override
   State<ChauffeurInfo> createState() => _ChauffeurInfoState();
@@ -66,14 +67,15 @@ Future<void> _addNewBin(
 
   Future<void> _removeBin(int index) async {
     List<Benne> bins = await _bins;
+    Benne binToRemove = bins[index];
+    Entreprise entreprise = await EntrepriseServices().getEntreprise(binToRemove.client);
     bins.removeAt(index);
     await EntrepriseServices().removeBenneFromEntreprise(
-        bins[index].client, bins[index].id);
+        entreprise.id, binToRemove);
     await _loadData(); // Reload the data after removing a bin
   }
 
-  void _showBinOptions(BuildContext context, String binId, String location,
-      int fillLevel, Entreprise entreprise, additionalArgument) {
+  void _showBinOptions(BuildContext context, Benne bin, Entreprise entreprise, additionalArgument) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -83,15 +85,15 @@ Future<void> _addNewBin(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Options pour $binId',
+                'Options pour benne n°${bin.id}',
                 style:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  // Show the bin info
-                  
+                  // Show the bin info in a box
+                  _ShowBinInfo(context, bin, entreprise);
                   Navigator.pop(context);
                 },
                 child: const Text('Info'),
@@ -108,15 +110,13 @@ Future<void> _addNewBin(
                 onPressed: () async {
                   // Find the index of the bin in the _bins list
                   int index = (await _bins).indexWhere(
-                      (bin) => bin.id == binId && bin.location == location);
+                      (newbin) => newbin.id == bin.id && newbin.location == bin.location);
 
                   // Remove the bin from the _bins list
                   _removeBin(index);
-
                   // Remove the bin from the database
                   EntrepriseServices()
-                      .removeBenneFromEntreprise(entreprise.id, binId);
-
+                      .removeBenneFromEntreprise(entreprise.id, bin);
                   Navigator.pop(context);
                 },
                 child: const Text('Récupérer'),
@@ -198,17 +198,6 @@ Future<void> _addNewBin(
                   binType = value;
                 },
               ),
-              const SizedBox(height: 10),
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Niveau de remplissage (%)',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  fillLevel = int.tryParse(value) ?? 0;
-                },
-              ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
@@ -216,7 +205,7 @@ Future<void> _addNewBin(
                     Entreprise entreprise = _companies.firstWhere(
                         (company) => company.nom == selectedCompany);
                     _addNewBin(
-                        binType, binNumber, (fillLevel/100).toDouble(), entreprise);
+                        binType, binNumber, 0, entreprise);
                     Navigator.pop(context);
                   }
                 },
@@ -236,36 +225,6 @@ Future<void> _addNewBin(
     );
   }
 
-  Future<void> _confirmLogout(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirmation'),
-          content: const Text('Voulez-vous vraiment vous déconnecter?'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Annuler'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Se Déconnecter'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                      builder: (context) => const ProfileSelectScreen()),
-                );
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     // Regroupement et tri des bennes par niveau de remplissage
@@ -280,27 +239,12 @@ Future<void> _addNewBin(
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 198, 222, 226),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (context) => const ProfileSelectScreen()),
-            );
-          },
-        ),
+        leading: const ConfirmLogout(),
         title: Center(
           child: Image.asset('lib/assets/icons/BinTech_Logo.jpg',
               height: 50, width: 50, fit: BoxFit.cover),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              _confirmLogout(context);
-            },
-          ),
-        ],
+        actions: []
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -338,9 +282,7 @@ Future<void> _addNewBin(
                               onTap: () async {
                                 _showBinOptions(
                                     context,
-                                    bin.id,
-                                    bin.location,
-                                    bin.fullness.toInt(),
+                                    bin,
                                     await EntrepriseServices()
                                         .getEntreprise(bin.client),
                                     null);
@@ -363,6 +305,35 @@ Future<void> _addNewBin(
         tooltip: 'Ajouter',
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  Future<void> _ShowBinInfo(BuildContext context, Benne bin, Entreprise entreprise) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Informations sur la benne ${bin.id}'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Type de déchets: ${entreprise.listBenne.firstWhere((element) => element.id == bin.id).type}'),
+              Text('Emplacement: ${bin.location}'),
+              Text('Taux de remplissage: ${bin.fullness*100}%'),
+              Text('Client: ${entreprise.nom}'),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Fermer'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -48,13 +48,14 @@ class UserLoginPage extends StatelessWidget {
               onPressed: () async {
                 String username = usernameController.text;
                 String password = passwordController.text;
-                bool userExists = await UserServices().checkUser(username, password, userType);
+                bool userExists = await UserServices()
+                    .checkUser(username, password, userType);
                 print('Username: $username');
                 print('Password: $password');
                 print('User type: $userType');
                 print('User exists: $userExists');
-                User user = await UserServices().getUser(username);
                 if (userExists) {
+                  User user = await UserServices().getUser(username);
                   if (userType == 'client') {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
@@ -64,7 +65,7 @@ class UserLoginPage extends StatelessWidget {
                   } else if (userType == 'chauffeur') {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
-                        builder: (context) => ChauffeurScreen(user : user),
+                        builder: (context) => ChauffeurScreen(user: user),
                       ),
                     );
                   } else {
@@ -75,12 +76,18 @@ class UserLoginPage extends StatelessWidget {
                     );
                   }
                 } else {
-                  // Handle the case when the user does not exist
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content:
+                          Text('Nom d\'utilisateur ou mot de passe incorrect'),
+                    ),
+                  );
                 }
               },
               child: const Text('Connexion'),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 12.0, horizontal: 24.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),

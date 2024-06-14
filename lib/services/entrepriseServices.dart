@@ -44,10 +44,11 @@ class EntrepriseServices {
     });
   }
 
-  Future<void> removeBenneFromEntreprise(String entrepriseId, String benneId) {
+  Future<void> removeBenneFromEntreprise(String entrepriseId, Benne bin) {
     return _entrepriseCollection.doc(entrepriseId).update({
-      'listBenne': FieldValue.arrayRemove([benneId]),
-    });
+      'listBenne': FieldValue.arrayRemove([bin.toJson()]),
+    }).then((value) => print('Benne removed'))
+        .catchError((error) => print('Failed to remove benne: $error'));
   }
 
   Future<void> updateBenneList(String entrepriseId, List<String> listBenne) {
