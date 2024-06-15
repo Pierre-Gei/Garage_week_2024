@@ -1,12 +1,13 @@
 class Benne{
-  final String id;
-  final double fullness;
-  final String type;
-  final String location;
-  final String client;
-  final bool emptying;
-  final String? emptyingDate;
-  final String? lastUpdate;
+  String id;
+  double fullness;
+  String type;
+  String location;
+  String client;
+  bool emptying;
+  DateTime? emptyingDate;
+  DateTime? lastUpdate;
+  String? BluetoothDeviceSerial;
 
   Benne({
     required this.id,
@@ -17,6 +18,7 @@ class Benne{
     required this.emptying,
     this.emptyingDate,
     this.lastUpdate,
+    this.BluetoothDeviceSerial,
   });
 
   factory Benne.fromJson(Map<String, dynamic> json) {
@@ -27,8 +29,9 @@ class Benne{
       location: json['location'],
       client: json['client'],
       emptying: json['emptying'],
-      emptyingDate: json['emptyingDate'],
-      lastUpdate: json['lastUpdate'],
+      emptyingDate: json['emptyingDate']?.toDate(),
+      lastUpdate: json['lastUpdate']?.toDate(),
+      BluetoothDeviceSerial: json['BluetoothDeviceSerial'],
     );
   }
 
@@ -42,6 +45,7 @@ class Benne{
       'emptying': emptying,
       'emptyingDate': emptyingDate,
       'lastUpdate': lastUpdate,
+      'BluetoothDeviceSerial': BluetoothDeviceSerial,
     };
   }
 }

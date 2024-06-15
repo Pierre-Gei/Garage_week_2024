@@ -54,6 +54,7 @@ class ProfileSelect extends StatelessWidget {
               },
               child: const Text('client'),
             ),
+
             ElevatedButton(
               onPressed: () {
                 debugPrint('chauffeur');
@@ -63,9 +64,10 @@ class ProfileSelect extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                // Navigate to the véolia screen
+                debugPrint('véolia');
+                const ProfileSelectScreen()._navigateToLogin(context, 'veolia');
               },
-              child: const Text('véolia'),
+              child: const Text('veolia'),
             ),
           ],
         ),

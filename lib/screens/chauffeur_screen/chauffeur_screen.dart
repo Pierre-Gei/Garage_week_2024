@@ -59,7 +59,7 @@ Future<void> _addNewBin(
     location: entreprise.ville,
     client: entreprise.nom,
     emptying: false,
-    lastUpdate: DateTime.now().toIso8601String(),
+    lastUpdate: DateTime.now(),
   );
   await EntrepriseServices().addBenneToEntreprise(entreprise.id, newBin);
   await _loadData(); // Reload the data after adding a new bin
@@ -244,7 +244,9 @@ Future<void> _addNewBin(
           child: Image.asset('lib/assets/icons/BinTech_Logo.jpg',
               height: 50, width: 50, fit: BoxFit.cover),
         ),
-        actions: []
+        actions: [
+          SizedBox(width: 57),
+        ]
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
