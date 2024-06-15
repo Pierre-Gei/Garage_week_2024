@@ -9,8 +9,8 @@ void addUserToDatabase() async {
   var userServices = UserServices();
   await userServices.addUser(User(
     id: '1',
-    login: 'client1',
-    password: 'client1',
+    login: '',
+    password: '',
     nom: 'Client 1',
     ville: 'Toulon',
     role: 'client',
@@ -43,8 +43,8 @@ void addUserToDatabase() async {
   ));
   await userServices.addUser(User(
     id: '2',
-    login : 'driver1',
-    password : 'driver1',
+    login : '',
+    password : '',
     nom : 'Michel',
     ville : 'Toulon',
     role : 'chauffeur',
@@ -52,11 +52,11 @@ void addUserToDatabase() async {
   ));
   await userServices.addUser(User(
     id: '3',
-    login : 'admin1',
-    password : 'admin1',
+    login : '',
+    password : '',
     nom : 'Admin 1',
     ville : 'Toulon',
-    role : 'véolia',
+    role : 'veolia',
     entrepriseId : 'NA',
   ));
 }

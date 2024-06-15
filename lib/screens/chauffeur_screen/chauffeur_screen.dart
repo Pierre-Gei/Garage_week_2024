@@ -59,7 +59,7 @@ Future<void> _addNewBin(
     location: entreprise.ville,
     client: entreprise.nom,
     emptying: false,
-    lastUpdate: DateTime.now().toIso8601String(),
+    lastUpdate: DateTime.now(),
   );
   await EntrepriseServices().addBenneToEntreprise(entreprise.id, newBin);
   await _loadData(); // Reload the data after adding a new bin

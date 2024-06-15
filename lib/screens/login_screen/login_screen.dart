@@ -70,6 +70,7 @@ class UserLoginPage extends StatelessWidget {
                       ),
                     );
                   } else if (userType == 'veolia') {
+                    print('go to veolia screen');
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) => Veolia_screen(user: user),

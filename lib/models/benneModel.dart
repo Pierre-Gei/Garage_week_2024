@@ -4,9 +4,9 @@ class Benne{
   final String type;
   final String location;
   final String client;
-  final bool emptying;
-  final String? emptyingDate;
-  final String? lastUpdate;
+  bool emptying;
+  DateTime? emptyingDate;
+  final DateTime? lastUpdate;
   final String? BluetoothDeviceSerial;
 
   Benne({
@@ -29,8 +29,8 @@ class Benne{
       location: json['location'],
       client: json['client'],
       emptying: json['emptying'],
-      emptyingDate: json['emptyingDate'],
-      lastUpdate: json['lastUpdate'],
+      emptyingDate: json['emptyingDate']?.toDate(),
+      lastUpdate: json['lastUpdate']?.toDate(),
       BluetoothDeviceSerial: json['BluetoothDeviceSerial'],
     );
   }
