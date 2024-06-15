@@ -14,6 +14,7 @@ class _BinUpdateScreenState extends State<BinUpdateScreen> {
   BluetoothConnection? connection;
   List<Benne> bins = []; // This will hold the bins
   Benne? selectedBin;
+  Map<String, String> bluetoothData = {'serialNumber': '', 'fillRate': ''};
 
   @override
   void initState() {
@@ -25,8 +26,11 @@ class _BinUpdateScreenState extends State<BinUpdateScreen> {
     // Fetch the bins from the company's data
     List<Benne> fetchedBins = await EntrepriseServices().getAllBenne();
 
+    // Get the Bluetooth device data
+    bluetoothData = await BtService().getBluetoothData();
+
     // Get the Bluetooth device serial number
-    String btDeviceSerial = await BtService().getBluetoothDeviceSerial();
+    String btDeviceSerial = bluetoothData['serialNumber'] ?? '';
 
     // Check if any of the fetched bins have a BluetoothDeviceSerial that matches the one from the Bluetooth device
     selectedBin = fetchedBins.firstWhere(
@@ -54,6 +58,8 @@ class _BinUpdateScreenState extends State<BinUpdateScreen> {
         padding: EdgeInsets.all(16.0), // Add your desired padding here
         child: Column(
           children: <Widget>[
+            Text('Taux de remplissage: ${bluetoothData['fillRate']}'),
+            Text('Bluetooth Serial: ${bluetoothData['serialNumber']}'),
             const Text('Selectionnez la benne à mettre à jour:',
                 style: TextStyle(fontSize: 18)),
             Expanded(
@@ -84,38 +90,15 @@ class _BinUpdateScreenState extends State<BinUpdateScreen> {
                                   Text('Benne n°${selectedBin!.id}'),
                                   Text('Type: ${selectedBin!.type}'),
                                   Text('Emplacement: ${selectedBin!.location}'),
-                                  FutureBuilder<String>(
-                                    future: BtService()
-                                        .getBluetoothTauxRemplissage(),
-                                    builder: (BuildContext context,
-                                        AsyncSnapshot<String> snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return CircularProgressIndicator();
-                                      } else {
-                                        return Text(
-                                            'Taux de remplissage: ${snapshot.data}');
-                                      }
-                                    },
-                                  ),
-                                  FutureBuilder<String>(
-                                    future:
-                                        BtService().getBluetoothDeviceSerial(),
-                                    builder: (BuildContext context,
-                                        AsyncSnapshot<String> snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return CircularProgressIndicator();
-                                      } else {
-                                        return Text(
-                                            'Bluetooth Serial: ${snapshot.data}');
-                                      }
-                                    },
+                                  Column(
+                                    children: [
+                                      Text('Taux de remplissage: ${bluetoothData['fillRate']}'),
+                                      Text('Bluetooth Serial: ${bluetoothData['serialNumber']}'),
+                                    ],
                                   ),
                                   ElevatedButton(
                                     onPressed: () {
                                       // Update the database with the selected bin and data from Bluetooth
-
                                       Navigator.pop(context);
                                     },
                                     child: Text('Mettre à jour'),
