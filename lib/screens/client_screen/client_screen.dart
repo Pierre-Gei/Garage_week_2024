@@ -88,7 +88,7 @@ class _ClientInfoState extends State<ClientInfo> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => BtDeviceConnectScreen(),
+                              builder: (context) => BtDeviceConnectScreen(entreprise: entreprise),
                             ),
                           );
                         },

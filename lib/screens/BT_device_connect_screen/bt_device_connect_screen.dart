@@ -8,6 +8,9 @@ import '../../services/btService.dart';
 import '../bin_update_screen/bin_update_screen.dart';
 
 class BtDeviceConnectScreen extends StatefulWidget {
+  var entreprise;
+
+  BtDeviceConnectScreen({required this.entreprise});
   @override
   _BtDeviceConnectScreenState createState() => _BtDeviceConnectScreenState();
 }
@@ -100,7 +103,7 @@ class _BtDeviceConnectScreenState extends State<BtDeviceConnectScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => BinUpdateScreen(),
+                                builder: (context) => BinUpdateScreen(entreprise: widget.entreprise),
                               ),
                             );
                           },

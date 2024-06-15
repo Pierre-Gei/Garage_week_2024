@@ -1,13 +1,13 @@
 class Benne{
-  final String id;
-  final double fullness;
-  final String type;
-  final String location;
-  final String client;
+  String id;
+  double fullness;
+  String type;
+  String location;
+  String client;
   bool emptying;
   DateTime? emptyingDate;
-  final DateTime? lastUpdate;
-  final String? BluetoothDeviceSerial;
+  DateTime? lastUpdate;
+  String? BluetoothDeviceSerial;
 
   Benne({
     required this.id,

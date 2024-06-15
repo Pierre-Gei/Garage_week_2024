@@ -3,14 +3,20 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:garage_week_2024/models/benneModel.dart';
 import 'package:garage_week_2024/services/entrepriseServices.dart';
 
+import '../../models/entrepriseModel.dart';
 import '../../services/btService.dart';
 
 class BinUpdateScreen extends StatefulWidget {
+  final Entreprise entreprise;
+
+  BinUpdateScreen({required this.entreprise});
+
   @override
   _BinUpdateScreenState createState() => _BinUpdateScreenState();
 }
 
 class _BinUpdateScreenState extends State<BinUpdateScreen> {
+
   BluetoothConnection? connection;
   List<Benne> bins = []; // This will hold the bins
   Benne? selectedBin;
@@ -99,6 +105,15 @@ class _BinUpdateScreenState extends State<BinUpdateScreen> {
                                   ElevatedButton(
                                     onPressed: () {
                                       // Update the database with the selected bin and data from Bluetooth
+                                      selectedBin!.fullness = double.parse(bluetoothData['fillRate'] ?? '0');
+                                      selectedBin!.BluetoothDeviceSerial = bluetoothData['serialNumber'] ?? '';
+                                      EntrepriseServices().updateBenneFromEntreprise(widget.entreprise.id, selectedBin!);
+                                      // Show a snackbar to confirm the update
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text('Benne n°${selectedBin!.id} mise à jour'),
+                                        ),
+                                      );
                                       Navigator.pop(context);
                                     },
                                     child: Text('Mettre à jour'),
