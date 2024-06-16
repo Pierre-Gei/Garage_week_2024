@@ -147,7 +147,7 @@ class FacturesPreview extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => FactureDetailPage(facture: factures[index]),
+                      builder: (context) => FactureDetailPage(facture: {'details': [factures[index]]}),
                     ),
                   );
                 },

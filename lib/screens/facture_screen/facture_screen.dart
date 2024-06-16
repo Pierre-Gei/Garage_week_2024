@@ -7,6 +7,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
+import '../../models/factureModel.dart';
+import '../../services/factureService.dart';
 import '../veolia_screen/veolia_screen.dart';
 
 class FactureDetailPage extends StatefulWidget {
@@ -176,59 +178,41 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
   }
 }
 
+
 class FacturesPage extends StatelessWidget {
   const FacturesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> factures = [
-      {
-        'title': 'Carrefour',
-        'amount': 800,
-        'details': [
-          {'item': 'Produit A', 'quantity': 10, 'unitPrice': 20.0, 'total': 200.0},
-          {'item': 'Produit B', 'quantity': 20, 'unitPrice': 30.0, 'total': 600.0},
-        ],
-      },
-      {
-        'title': 'Leclerc',
-        'amount': 1260,
-        'details': [
-          {'item': 'Produit C', 'quantity': 5, 'unitPrice': 50.0, 'total': 250.0},
-          {'item': 'Produit D', 'quantity': 10, 'unitPrice': 101.0, 'total': 1010.0},
-        ],
-      },
-      {
-        'title': 'Déchèterie',
-        'amount': 1230,
-        'details': [
-          {'item': 'Produit E', 'quantity': 15, 'unitPrice': 50.0, 'total': 750.0},
-          {'item': 'Produit F', 'quantity': 20, 'unitPrice': 24.0, 'total': 480.0},
-        ],
-      },
-    ];
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Factures'),
-      ),
-      body: ListView.builder(
-        itemCount: factures.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(factures[index]['title']),
-            subtitle: Text('Montant: ${factures[index]['amount']} €'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FactureDetailPage(facture: factures[index]),
-                ),
+    final factureServices = FactureServices();
+    return FutureBuilder<List<Facture>>(
+      future: factureServices.getAllFactures(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          final factures = snapshot.data;
+          return ListView.builder(
+            itemCount: factures?.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(factures?[index].title ?? ''),
+                subtitle: Text('Montant: ${factures?[index].amount} €'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FactureDetailPage(facture: factures?[index].toMap() ?? {}),
+                    ),
+                  );
+                },
               );
             },
           );
-        },
-      ),
+        }
+      },
     );
   }
 }
