@@ -1,71 +1,109 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:time_planner/time_planner.dart';
+
+import '../../models/benneModel.dart';
+import '../../services/entrepriseServices.dart';
 
 class PlanningPage extends StatefulWidget {
   const PlanningPage({super.key});
 
   @override
-  _PlanningPageState createState() => _PlanningPageState();
+  State<PlanningPage> createState() => _PlanningPageState();
 }
 
 class _PlanningPageState extends State<PlanningPage> {
-  List<TimePlannerTask> tasks = [
-    TimePlannerTask(
-      color: Colors.purple,
-      dateTime: TimePlannerDateTime(day: 0, hour: 14, minutes: 30),
-      minutesDuration: 90,
-      daysDuration: 1,
-      onTap: () {},
-      child: Text(
-        'this is a task',
-        style: TextStyle(color: Colors.grey[350], fontSize: 12),
-      ),
-    ),
-  ];
+  List<TimePlannerTask> tasks = [];
+
+  @override
+  void initState() {
+    super.initState();
+    LoadData().fetchData().then((bins) {
+      for (var bin in bins) {
+        var newTask = TimePlannerTask(
+          color: Colors.blue,
+          minutesDuration: 60,
+          daysDuration: 1,
+          dateTime: TimePlannerDateTime(
+            day: bin.emptyingDate!.difference(DateTime.now()).inDays,
+            hour: bin.emptyingDate!.hour.toInt(),
+            minutes: 0,
+          ),
+          child: Text('benne-${bin.id} à ${bin.location}'),
+        );
+
+        if (newTask.dateTime.hour < 8) {
+          newTask.dateTime.hour = 8;
+        }
+
+        if (!doesTaskOverlap(newTask)) {
+          tasks.add(newTask);
+        }
+      }
+      setState(() {}); // Notify the framework that the internal state of this object has changed.
+    });
+  }
+
+  bool doesTaskOverlap(TimePlannerTask newTask) {
+    for (var task in tasks) {
+      if (task.dateTime.day == newTask.dateTime.day) {
+        var taskEndHour = task.dateTime.hour + task.minutesDuration ~/ 60;
+        var newTaskEndHour = newTask.dateTime.hour + newTask.minutesDuration ~/ 60;
+
+        if ((newTask.dateTime.hour >= task.dateTime.hour && newTask.dateTime.hour < taskEndHour) ||
+            (newTaskEndHour > task.dateTime.hour && newTaskEndHour <= taskEndHour)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Planning'),
+        backgroundColor: const Color.fromARGB(255, 198, 222, 226),
       ),
       body: Center(
         child: Column(
           children: [
-            const Text('Planning', style: TextStyle(fontSize: 24)),
             const SizedBox(height: 20),
             Expanded(
               child: TimePlanner(
-                startHour: 0,
-                endHour: 23,
+                startHour: 6,
+                endHour: 20,
+                use24HourFormat: true,
+                setTimeOnAxis: false,
                 headers: [
                   TimePlannerTitle(
-                    title: "Lundi",
-                    date: "10/06/2024",
+                    title: DateFormat('dd-MM-yy').format(DateTime.now()),
                   ),
                   TimePlannerTitle(
-                    title: "Mardi",
-                    date: "11/06/2024",
+                    title: DateFormat('dd-MM-yy')
+                        .format(DateTime.now().add(Duration(days: 1))),
                   ),
                   TimePlannerTitle(
-                    title: "Mercredi",
-                    date: "12/06/2024",
+                    title: DateFormat('dd-MM-yy')
+                        .format(DateTime.now().add(Duration(days: 2))),
                   ),
                   TimePlannerTitle(
-                    title: "Jeudi",
-                    date: "13/06/2024",
+                    title: DateFormat('dd-MM-yy')
+                        .format(DateTime.now().add(Duration(days: 3))),
                   ),
                   TimePlannerTitle(
-                      title: "Vendredi",
-                      date: "14/06/2024"),
-                  TimePlannerTitle(
-                    title: "Samedi",
-                    date: "15/06/2024",
+                    title: DateFormat('dd-MM-yy')
+                        .format(DateTime.now().add(Duration(days: 4))),
                   ),
                   TimePlannerTitle(
-                    title: "Dimanche",
-                    date: "16/06/2024",
+                    title: DateFormat('dd-MM-yy')
+                        .format(DateTime.now().add(Duration(days: 5))),
+                  ),
+                  TimePlannerTitle(
+                    title: DateFormat('dd-MM-yy')
+                        .format(DateTime.now().add(Duration(days: 6))),
                   ),
                 ],
                 tasks: tasks,
@@ -75,5 +113,12 @@ class _PlanningPageState extends State<PlanningPage> {
         ),
       ),
     );
+  }
+}
+
+class LoadData {
+  Future<List<Benne>> fetchData() async {
+    List<Benne>? fetchedBins = await EntrepriseServices().getAllBenne();
+    return fetchedBins.where((bin) => bin.emptyingDate != null).toList();
   }
 }

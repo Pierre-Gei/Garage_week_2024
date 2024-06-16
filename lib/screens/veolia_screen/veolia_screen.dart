@@ -5,14 +5,11 @@ import 'package:flutter/widgets.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../models/userModel.dart';
+import '../../widgets/_confirmLogout.dart';
 import '../facture_screen/facture_screen.dart';
 import '../planning_screen/planning_screen.dart';
 import '../stats_screen/stats_screen.dart';
 
-//main
-void main() {
-  runApp(Veolia_screen(user: User(id: '1', login: '', password: '', nom: '', ville: '', role: '', entrepriseId: '',)));
-}
 
 class Veolia_screen extends StatelessWidget {
   const Veolia_screen({Key? key, required User user}) : super(key: key);
@@ -43,15 +40,15 @@ class Veolia_info extends StatelessWidget {
     _requestPermissions(); // Demande les permissions lors de l'ouverture de l'application
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Veolia'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              // Action pour le profil
-            },
-          ),
-        ],
+        backgroundColor: const Color.fromARGB(255, 198, 222, 226),
+        leading: const ConfirmLogout(),
+        title: Center(
+          child: Image.asset('lib/assets/icons/BinTech_Logo.jpg',
+              height: 50, width: 50, fit: BoxFit.cover),
+        ),
+          actions: const [
+            SizedBox(width: 57),
+          ]
       ),
       body: SingleChildScrollView(
         child: Column(
