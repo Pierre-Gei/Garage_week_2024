@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:fl_chart/fl_chart.dart';
-
 import '../../models/userModel.dart';
 import '../facture_screen/facture_screen.dart';
 import '../planning_screen/planning_screen.dart';
+import '../stats_screen/stats_screen.dart';
 
 //main
 void main() {
@@ -27,13 +26,13 @@ class Veolia_screen extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: const Veolia_info(),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class Veolia_info extends StatelessWidget {
+  const Veolia_info({super.key});
 
   Future<void> _requestPermissions() async {
     await Permission.storage.request();
@@ -164,65 +163,6 @@ class FacturesPreview extends StatelessWidget {
   }
 }
 
-class FacturesPage extends StatelessWidget {
-  const FacturesPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> factures = [
-      {
-        'title': 'Carrefour',
-        'amount': 800,
-        'details': [
-          {'item': 'Produit A', 'quantity': 10, 'unitPrice': 20.0, 'total': 200.0},
-          {'item': 'Produit B', 'quantity': 20, 'unitPrice': 30.0, 'total': 600.0},
-        ],
-      },
-      {
-        'title': 'Leclerc',
-        'amount': 1260,
-        'details': [
-          {'item': 'Produit C', 'quantity': 5, 'unitPrice': 50.0, 'total': 250.0},
-          {'item': 'Produit D', 'quantity': 10, 'unitPrice': 101.0, 'total': 1010.0},
-        ],
-      },
-      {
-        'title': 'Déchèterie',
-        'amount': 1230,
-        'details': [
-          {'item': 'Produit E', 'quantity': 15, 'unitPrice': 50.0, 'total': 750.0},
-          {'item': 'Produit F', 'quantity': 20, 'unitPrice': 24.0, 'total': 480.0},
-        ],
-      },
-    ];
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Factures'),
-      ),
-      body: ListView.builder(
-        itemCount: factures.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(factures[index]['title']),
-            subtitle: Text('Montant: ${factures[index]['amount']} €'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FactureDetailPage(facture: factures[index]),
-                ),
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
-}
-
-
-
 class InvoiceDataSource extends DataGridSource {
   InvoiceDataSource(this.details, this.updateCell, this.removeRow) {
     buildDataGridRows();
@@ -277,92 +217,3 @@ class InvoiceDataSource extends DataGridSource {
     updateCell(cell, rowColumnIndex);
   }
 }
-
-class StatistiquesPage extends StatelessWidget {
-  const StatistiquesPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Statistiques'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const Text('Statistiques', style: TextStyle(fontSize: 24)),
-            const SizedBox(height: 20),
-            Expanded(
-              child: LineChart(
-                LineChartData(
-                  gridData: FlGridData(show: false),
-                  titlesData: FlTitlesData(show: false),
-                  borderData: FlBorderData(show: false),
-                  minX: 0,
-                  maxX: 7,
-                  minY: 0,
-                  maxY: 10,
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: [
-                        FlSpot(0, 3),
-                        FlSpot(1, 5),
-                        FlSpot(2, 4),
-                        FlSpot(3, 7),
-                        FlSpot(4, 8),
-                        FlSpot(5, 6),
-                        FlSpot(6, 9),
-                      ],
-                      isCurved: true,
-                      colors: [Colors.blue],
-                      barWidth: 4,
-                      isStrokeCapRound: true,
-                      dotData: FlDotData(show: false),
-                      belowBarData: BarAreaData(show: false),
-                    ),
-                    LineChartBarData(
-                      spots: [
-                        FlSpot(0, 2),
-                        FlSpot(1, 4),
-                        FlSpot(2, 5),
-                        FlSpot(3, 6),
-                        FlSpot(4, 7),
-                        FlSpot(5, 5),
-                        FlSpot(6, 8),
-                      ],
-                      isCurved: true,
-                      colors: [Colors.red],
-                      barWidth: 4,
-                      isStrokeCapRound: true,
-                      dotData: FlDotData(show: false),
-                      belowBarData: BarAreaData(show: false),
-                    ),
-                    LineChartBarData(
-                      spots: [
-                        FlSpot(0, 1),
-                        FlSpot(1, 3),
-                        FlSpot(2, 2),
-                        FlSpot(3, 4),
-                        FlSpot(4, 5),
-                        FlSpot(5, 4),
-                        FlSpot(6, 6),
-                      ],
-                      isCurved: true,
-                      colors: [Colors.green],
-                      barWidth: 4,
-                      isStrokeCapRound: true,
-                      dotData: FlDotData(show: false),
-                      belowBarData: BarAreaData(show: false),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
