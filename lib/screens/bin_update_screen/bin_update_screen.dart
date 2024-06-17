@@ -132,7 +132,7 @@ class _BinUpdateScreenState extends State<BinUpdateScreen> {
                                   ),
                                   ElevatedButton(
                                     onPressed: () {
-                                      selectedBin!.fullness = double.parse(bluetoothData['fillRate'] ?? '0');
+                                      selectedBin!.fullness = double.parse(bluetoothData['fillRate'] ?? '0')/100;
                                       selectedBin!.BluetoothDeviceSerial = bluetoothData['serialNumber'] ?? '';
                                       EntrepriseServices().updateBenneFromEntreprise(widget.entreprise.id, selectedBin!);
                                       binUpdateNotifier.value = selectedBin;

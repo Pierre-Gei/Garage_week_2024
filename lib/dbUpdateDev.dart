@@ -13,8 +13,8 @@ void addUserToDatabase() async {
   var userServices = UserServices();
   await userServices.addUser(User(
     id: '1',
-    login: '',
-    password: '',
+    login: 'client1',
+    password: 'client1',
     nom: 'Client 1',
     ville: 'Toulon',
     role: 'client',
@@ -26,29 +26,28 @@ void addUserToDatabase() async {
     nom: 'Entreprise 1',
     adresse: '1 rue de la Paix',
     ville: 'Toulon',
-    listBenne: [
-      Benne(
-        id: '1',
-        type: 'plastique',
-        fullness: 0.8,
-        location: 'Toulon',
-        client: 'Entreprise 1',
-        emptying: false,
-      ),
-      Benne(
-        id: '2',
-        type: 'verre',
-        fullness: 0.5,
-        location: 'Toulon',
-        client: 'Entreprise 1',
-        emptying: false,
-      ),
-    ],
+    listBenne: [],
+  ));
+  await userServices.addUser(User(
+    id: '4',
+    login: 'client2',
+    password: 'client2',
+    nom: 'Client 2',
+    ville: 'Toulon',
+    role: 'client',
+    entrepriseId: '2',
+  ));
+  await entrepriseServices.addEntreprise(Entreprise(
+    id: '2',
+    nom: 'Entreprise 2',
+    adresse: '2 rue de la Paix',
+    ville: 'Toulon',
+    listBenne: [],
   ));
   await userServices.addUser(User(
     id: '2',
-    login : '',
-    password : '',
+    login : 'driver1',
+    password : 'driver1',
     nom : 'Michel',
     ville : 'Toulon',
     role : 'chauffeur',
@@ -56,8 +55,8 @@ void addUserToDatabase() async {
   ));
   await userServices.addUser(User(
     id: '3',
-    login : '',
-    password : '',
+    login : 'admin1',
+    password : 'admin1',
     nom : 'Admin 1',
     ville : 'Toulon',
     role : 'veolia',
@@ -80,6 +79,25 @@ void addUserToDatabase() async {
         'quantity': 5,
         'unitPrice': 2.0,
         'total': 10.0,
+      },
+    ],
+  ));
+  await factureServices.addFacture(Facture(
+    id: '2',
+    title: 'Facture 2',
+    amount: '2000',
+    details: [
+      {
+        'item': 'Plastique',
+        'quantity': 20,
+        'unitPrice': 1.0,
+        'total': 20.0,
+      },
+      {
+        'item': 'Verre',
+        'quantity': 10,
+        'unitPrice': 2.0,
+        'total': 20.0,
       },
     ],
   ));
