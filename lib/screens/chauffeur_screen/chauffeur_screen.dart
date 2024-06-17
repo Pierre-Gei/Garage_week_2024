@@ -271,7 +271,7 @@ Future<void> _addNewBin(
                             margin: const EdgeInsets.symmetric(vertical: 5),
                             child: ListTile(
                               title: Text('Benne n° ${bin.id}'),
-                              trailing: Text('${(bin.fullness * 100)}%'),
+                              trailing: Text('${(bin.fullness)}%'),
                               onTap: () async {
                                 _showBinOptions(
                                     context,

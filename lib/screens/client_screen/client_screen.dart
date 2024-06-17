@@ -162,7 +162,7 @@ class _ClientInfoState extends State<ClientInfo> {
                                                       Text(
                                                           'Emplacement: ${benne.location}'),
                                                       Text(
-                                                          'Taux de remplssage: ${(benne.fullness * 100).toStringAsFixed(1)}%'),
+                                                          'Taux de remplssage: ${(benne.fullness).toStringAsFixed(1)}%'),
                                                       Text(
                                                           'Client: ${benne.client}'),
                                                       Text(
@@ -253,7 +253,7 @@ class _ClientInfoState extends State<ClientInfo> {
                                                             Colors.green),
                                                   ),
                                                   Text(
-                                                    '${(benne.fullness * 100).toStringAsFixed(1)}%',
+                                                    '${(benne.fullness).toStringAsFixed(1)}%',
                                                     style: const TextStyle(
                                                         color: Colors.white),
                                                   ),

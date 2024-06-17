@@ -92,7 +92,7 @@ class _VeoliaBenneListScreenState extends State<VeoliaBenneListScreen> {
                             margin: const EdgeInsets.symmetric(vertical: 5),
                             child: ListTile(
                               title: Text('Benne n° ${bin.id}'),
-                              trailing: Text('${(bin.fullness * 100)}%'),
+                              trailing: Text('${(bin.fullness)}%'),
                             ),
                           );
                         }).toList(),
