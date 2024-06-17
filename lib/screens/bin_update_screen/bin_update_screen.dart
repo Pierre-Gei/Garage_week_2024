@@ -11,7 +11,7 @@ import '../../services/entrepriseServices.dart';
 class BinUpdateScreen extends StatefulWidget {
   final Entreprise entreprise;
 
-  BinUpdateScreen({required this.entreprise});
+  const BinUpdateScreen({super.key, required this.entreprise});
 
   @override
   _BinUpdateScreenState createState() => _BinUpdateScreenState();

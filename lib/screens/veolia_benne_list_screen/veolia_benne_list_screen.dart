@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/benneModel.dart';
@@ -38,12 +37,12 @@ class _VeoliaBenneListScreenState extends State<VeoliaBenneListScreen> {
   Widget build(BuildContext context) {
     //regroupement des bennes par ville pour l'affichage
     final Map<String, List<Benne>> binsByCity = {};
-    _bins.forEach((bin) {
+    for (var bin in _bins) {
       if (!binsByCity.containsKey(bin.location)) {
         binsByCity[bin.location] = [];
       }
       binsByCity[bin.location]!.add(bin);
-    });
+    }
 
     return Scaffold(
       appBar: AppBar(

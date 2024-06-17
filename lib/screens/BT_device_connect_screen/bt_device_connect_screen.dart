@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
@@ -78,7 +77,7 @@ class _BtDeviceConnectScreenState extends State<BtDeviceConnectScreen> {
             onPressed: isBluetoothEnabled
                 ? () async {
                     await BtService().initBluetooth();
-                    await BtService.scan();
+                    BtService.scan();
                     print('Scanning');
                     setState(() {
                       isScanInitiated =
@@ -104,7 +103,7 @@ class _BtDeviceConnectScreenState extends State<BtDeviceConnectScreen> {
               builder: (context, snapshot) {
                 if (isBluetoothEnabled &&
                     snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (!isBluetoothEnabled) {
                   return const Center(child: Text('Bluetooth is disabled'));
                 } else if (isBluetoothEnabled &&

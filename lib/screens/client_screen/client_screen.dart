@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../../globals.dart';
 import '../../models/benneModel.dart';
@@ -13,7 +12,7 @@ import '../BT_device_connect_screen/bt_device_connect_screen.dart';
 class ClientScreen extends StatelessWidget {
   final User user;
   static const routeName = '/clientScreen';
-  const ClientScreen({required this.user, Key? key}) : super(key: key);
+  const ClientScreen({required this.user, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +30,7 @@ class ClientScreen extends StatelessWidget {
 
 class ClientInfo extends StatefulWidget {
   final User user;
-  ClientInfo(this.user, {Key? key}) : super(key: key);
+  const ClientInfo(this.user, {super.key});
 
   @override
   _ClientInfoState createState() => _ClientInfoState();
@@ -126,7 +125,7 @@ class _ClientInfoState extends State<ClientInfo> {
                       children: [
                         Text(
                           'Bienvenue ${entreprise.nom} !',
-                          style: TextStyle(fontSize: 25),
+                          style: const TextStyle(fontSize: 25),
                         ),
                         const Text('Mes bennes : ',
                             style: TextStyle(fontSize: 25)),
@@ -149,7 +148,7 @@ class _ClientInfoState extends State<ClientInfo> {
                                                   BoxConstraints constraints) {
                                                 return Container(
                                                   width: constraints.maxWidth,
-                                                  padding: EdgeInsets.all(16),
+                                                  padding: const EdgeInsets.all(16),
                                                   child: Column(
                                                     mainAxisSize:
                                                         MainAxisSize.min,

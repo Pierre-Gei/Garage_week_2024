@@ -6,7 +6,7 @@ import '../../services/entrepriseServices.dart';
 import '../../widgets/_confirmLogout.dart';
 
 class ChauffeurScreen extends StatelessWidget {
-  const ChauffeurScreen({Key? key, required User user}) : super(key: key);
+  const ChauffeurScreen({super.key, required User user});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class ChauffeurScreen extends StatelessWidget {
 }
 
 class ChauffeurInfo extends StatefulWidget {
-  const ChauffeurInfo({Key? key}) : super(key: key);
+  const ChauffeurInfo({super.key});
 
   @override
   State<ChauffeurInfo> createState() => _ChauffeurInfoState();
@@ -64,7 +64,7 @@ Future<void> _addNewBin(
 }
 
   Future<void> _removeBin(int index) async {
-    List<Benne> bins = await _bins;
+    List<Benne> bins = _bins;
     Benne binToRemove = bins[index];
     Entreprise entreprise = await EntrepriseServices().getEntreprise(binToRemove.client);
     bins.removeAt(index);
@@ -105,7 +105,7 @@ Future<void> _addNewBin(
               const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () async {
-                  int index = (await _bins).indexWhere(
+                  int index = (_bins).indexWhere(
                       (newbin) => newbin.id == bin.id && newbin.location == bin.location);
                   _removeBin(index);
                   EntrepriseServices()
@@ -201,7 +201,6 @@ Future<void> _addNewBin(
                     Navigator.pop(context);
                   }
                 },
-                child: const Text('Valider'),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                       vertical: 12.0, horizontal: 24.0),
@@ -209,6 +208,7 @@ Future<void> _addNewBin(
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
+                child: const Text('Valider'),
               ),
             ],
           ),
@@ -220,12 +220,12 @@ Future<void> _addNewBin(
   @override
   Widget build(BuildContext context) {
     final Map<String, List<Benne>> binsByCity = {};
-    _bins.forEach((bin) {
+    for (var bin in _bins) {
       if (!binsByCity.containsKey(bin.location)) {
         binsByCity[bin.location] = [];
       }
       binsByCity[bin.location]!.add(bin);
-    });
+    }
 
     return Scaffold(
       appBar: AppBar(

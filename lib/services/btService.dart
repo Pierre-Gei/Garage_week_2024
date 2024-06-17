@@ -114,7 +114,7 @@ class BtService {
 
   //envoi de données au périphérique bluetooth
   static Future<void> send(String data) async {
-    _connection?.output.add(utf8.encode(data + "\r\n"));
+    _connection?.output.add(utf8.encode("$data\r\n"));
     await _connection?.output.allSent;
   }
 

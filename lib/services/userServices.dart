@@ -45,18 +45,18 @@ class UserServices {
   //suppression de tous les utilisateurs
   Future<void> deleteAllUser() {
     return _userCollection.get().then((querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
+      for (var doc in querySnapshot.docs) {
         doc.reference.delete();
-      });
+      }
     });
   }
 
   //suppression de tous les utilisateurs d'un rôle
   Future<void> deleteAllUserFromRole(int role) {
     return _userCollection.where('role', isEqualTo: role).get().then((querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
+      for (var doc in querySnapshot.docs) {
         doc.reference.delete();
-      });
+      }
     });
   }
 

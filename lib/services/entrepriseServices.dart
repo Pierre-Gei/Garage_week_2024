@@ -49,9 +49,9 @@ class EntrepriseServices {
   //suppression de toutes les entreprises
   Future<void> deleteAllEntreprise() {
     return _entrepriseCollection.get().then((querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
+      for (var doc in querySnapshot.docs) {
         doc.reference.delete();
-      });
+      }
     });
   }
 
@@ -83,11 +83,11 @@ class EntrepriseServices {
   //suppression de toutes les bennes de toutes les entreprises
   Future<void> deleteAllBenne() {
     return _entrepriseCollection.get().then((querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
+      for (var doc in querySnapshot.docs) {
         doc.reference.update({
           'listBenne': [],
         });
-      });
+      }
     });
   }
 
@@ -129,7 +129,7 @@ class EntrepriseServices {
   Future<List<Entreprise>> getAllEntreprise() async {
     QuerySnapshot querySnapshot = await _entrepriseCollection.get();
     List<Entreprise> listEntreprise = [];
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       List<dynamic> listBenneDynamic = doc['listBenne'];
       List<Benne> listBenne =
           listBenneDynamic.map((benne) => Benne.fromJson(benne)).toList();
@@ -140,7 +140,7 @@ class EntrepriseServices {
         ville: doc['ville'],
         listBenne: listBenne,
       ));
-    });
+    }
     return listEntreprise;
   }
 
@@ -148,11 +148,11 @@ class EntrepriseServices {
   Future<List<Benne>> getAllBenne() async {
     QuerySnapshot querySnapshot = await _entrepriseCollection.get();
     List<Benne> listBenne = [];
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       List<dynamic> listBenneDynamic = doc['listBenne'];
       listBenne.addAll(
           listBenneDynamic.map((benne) => Benne.fromJson(benne)).toList());
-    });
+    }
     return listBenne;
   }
 
