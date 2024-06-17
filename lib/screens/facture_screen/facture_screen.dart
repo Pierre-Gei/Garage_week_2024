@@ -35,16 +35,20 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
   }
 
   void _updateCell(DataGridCell<dynamic> cell, dynamic newValue) {
-    final rowIndex = _invoiceDataSource.dataGridRows.indexWhere((row) => row.getCells().contains(cell));
-    final columnIndex = _invoiceDataSource.dataGridRows[rowIndex].getCells().indexOf(cell);
+    final rowIndex = _invoiceDataSource.dataGridRows
+        .indexWhere((row) => row.getCells().contains(cell));
+    final columnIndex =
+        _invoiceDataSource.dataGridRows[rowIndex].getCells().indexOf(cell);
     final String columnName = cell.columnName;
 
     setState(() {
-      _invoiceDataSource.dataGridRows[rowIndex].getCells()[columnIndex] = DataGridCell<dynamic>(columnName: columnName, value: newValue);
+      _invoiceDataSource.dataGridRows[rowIndex].getCells()[columnIndex] =
+          DataGridCell<dynamic>(columnName: columnName, value: newValue);
       _invoiceDataSource.details[rowIndex][columnName] = newValue;
       if (columnName == 'quantity' || columnName == 'unitPrice') {
         final int quantity = _invoiceDataSource.details[rowIndex]['quantity'];
-        final double unitPrice = _invoiceDataSource.details[rowIndex]['unitPrice'];
+        final double unitPrice =
+            _invoiceDataSource.details[rowIndex]['unitPrice'];
         _invoiceDataSource.details[rowIndex]['total'] = quantity * unitPrice;
         _invoiceDataSource.buildDataGridRows();
       }
@@ -92,9 +96,11 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
       final File file = File(path);
       await file.writeAsString(csvData);
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Fichier CSV exporté: $path')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Fichier CSV exporté: $path')));
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Permission refusée')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Permission refusée')));
     }
   }
 
@@ -109,7 +115,8 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Montant: ${widget.facture['amount']} €', style: const TextStyle(fontSize: 20)),
+            Text('Montant: ${widget.facture['amount']} €',
+                style: const TextStyle(fontSize: 20)),
             const SizedBox(height: 20),
             const Text('Détails:', style: TextStyle(fontSize: 20)),
             Expanded(
@@ -122,7 +129,8 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
                     label: Container(
                       padding: const EdgeInsets.all(8.0),
                       alignment: Alignment.center,
-                      child: const Text('Item', overflow: TextOverflow.ellipsis),
+                      child:
+                          const Text('Item', overflow: TextOverflow.ellipsis),
                     ),
                   ),
                   GridColumn(
@@ -130,7 +138,8 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
                     label: Container(
                       padding: const EdgeInsets.all(8.0),
                       alignment: Alignment.center,
-                      child: const Text('Quantité', overflow: TextOverflow.ellipsis),
+                      child: const Text('Quantité',
+                          overflow: TextOverflow.ellipsis),
                     ),
                   ),
                   GridColumn(
@@ -138,7 +147,8 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
                     label: Container(
                       padding: const EdgeInsets.all(8.0),
                       alignment: Alignment.center,
-                      child: const Text('Prix Unitaire', overflow: TextOverflow.ellipsis),
+                      child: const Text('Prix Unitaire',
+                          overflow: TextOverflow.ellipsis),
                     ),
                   ),
                   GridColumn(
@@ -146,7 +156,8 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
                     label: Container(
                       padding: const EdgeInsets.all(8.0),
                       alignment: Alignment.center,
-                      child: const Text('Total', overflow: TextOverflow.ellipsis),
+                      child:
+                          const Text('Total', overflow: TextOverflow.ellipsis),
                     ),
                   ),
                   GridColumn(
@@ -154,7 +165,8 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
                     label: Container(
                       padding: const EdgeInsets.all(8.0),
                       alignment: Alignment.center,
-                      child: const Text('Supprimer', overflow: TextOverflow.ellipsis),
+                      child: const Text('Supprimer',
+                          overflow: TextOverflow.ellipsis),
                     ),
                     allowEditing: false,
                     width: 100,
@@ -178,7 +190,6 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
   }
 }
 
-
 class FacturesPage extends StatelessWidget {
   const FacturesPage({super.key});
 
@@ -188,30 +199,46 @@ class FacturesPage extends StatelessWidget {
     return FutureBuilder<List<Facture>>(
       future: factureServices.getAllFactures(),
       builder: (context, snapshot) {
+        AppBar appBar = AppBar(
+          title: const Text('Factures'),
+          backgroundColor: const Color.fromARGB(255, 198, 222, 226),
+        );
+        Widget body;
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          body = CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          body = Text('Error: ${snapshot.error}');
         } else {
           final factures = snapshot.data;
-          return ListView.builder(
-            itemCount: factures?.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(factures?[index].title ?? ''),
-                subtitle: Text('Montant: ${factures?[index].amount} €'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FactureDetailPage(facture: factures?[index].toMap() ?? {}),
-                    ),
-                  );
-                },
-              );
-            },
-          );
+          if (factures == null || factures.isEmpty) {
+            body = const Text('Aucune facture trouvée');
+          } else {
+            body = ListView.builder(
+              itemCount: factures?.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(factures?[index].title ?? ''),
+                  subtitle: Text('Montant: ${factures?[index].amount} €'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FactureDetailPage(
+                            facture: factures?[index].toMap() ?? {}),
+                      ),
+                    );
+                  },
+                );
+              },
+            );
+          }
         }
+
+        Scaffold scaffold = Scaffold(
+          appBar: appBar,
+          body: body,
+        );
+        return scaffold;
       },
     );
   }

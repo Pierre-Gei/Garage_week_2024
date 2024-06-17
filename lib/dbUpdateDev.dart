@@ -1,9 +1,11 @@
 import 'package:garage_week_2024/services/entrepriseServices.dart';
+import 'package:garage_week_2024/services/factureService.dart';
 import 'package:garage_week_2024/services/userServices.dart';
 import 'package:garage_week_2024/models/userModel.dart';
 
 import 'models/benneModel.dart';
 import 'models/entrepriseModel.dart';
+import 'models/factureModel.dart';
 
 void addUserToDatabase() async {
   var userServices = UserServices();
@@ -58,5 +60,25 @@ void addUserToDatabase() async {
     ville : 'Toulon',
     role : 'veolia',
     entrepriseId : 'NA',
+  ));
+  var factureServices = FactureServices();
+  await factureServices.addFacture(Facture(
+    id: '1',
+    title: 'Facture 1',
+    amount: '1000',
+    details: [
+      {
+        'item': 'Plastique',
+        'quantity': 10,
+        'unitPrice': 1.0,
+        'total': 10.0,
+      },
+      {
+        'item': 'Verre',
+        'quantity': 5,
+        'unitPrice': 2.0,
+        'total': 10.0,
+      },
+    ],
   ));
 }
