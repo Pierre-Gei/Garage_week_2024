@@ -179,11 +179,9 @@ class _ClientInfoState extends State<ClientInfo> {
                                                                       context:
                                                                           context,
                                                                       initialDate:
-                                                                          nextSelectableDate(),
-                                                                      firstDate: DateTime
-                                                                              .now()
-                                                                          .add(const Duration(
+                                                                          nextSelectableDate().add(const Duration(
                                                                               days: 1)),
+                                                                      firstDate: nextSelectableDate(),
                                                                       lastDate:
                                                                           DateTime(
                                                                               2100),
@@ -240,7 +238,7 @@ class _ClientInfoState extends State<ClientInfo> {
                                                 alignment: Alignment.center,
                                                 children: [
                                                   LinearProgressIndicator(
-                                                    value: benne.fullness,
+                                                    value: benne.fullness/100,
                                                     minHeight: 20,
                                                     borderRadius:
                                                         BorderRadius.circular(

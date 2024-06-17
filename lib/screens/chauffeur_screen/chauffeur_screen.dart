@@ -313,7 +313,7 @@ Future<void> _addNewBin(
             children: [
               Text('Type de déchets: ${entreprise.listBenne.firstWhere((element) => element.id == bin.id).type}'),
               Text('Emplacement: ${bin.location}'),
-              Text('Taux de remplissage: ${bin.fullness*100}%'),
+              Text('Taux de remplissage: ${bin.fullness}%'),
               Text('Client: ${entreprise.nom}'),
             ],
           ),
