@@ -22,6 +22,7 @@ class _BtDeviceConnectScreenState extends State<BtDeviceConnectScreen> {
   bool isBluetoothEnabled = false;
   bool isScanInitiated = false;
 
+  
   @override
   void initState() {
     super.initState();

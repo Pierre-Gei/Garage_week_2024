@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:garage_week_2024/permissions.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'dbUpdateDev.dart';
 import 'firebase_options.dart';
@@ -13,6 +14,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await initializeDateFormatting('fr_FR', null);
+  await requestBluetoothPermissions();
   //addUserToDatabase();
   runApp(const ProfileSelectScreen());
 }
