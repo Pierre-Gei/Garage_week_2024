@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:garage_week_2024/models/userModel.dart';
+
+import '../models/userModel.dart';
+
 
 class UserServices {
   final CollectionReference _userCollection = FirebaseFirestore.instance.collection('users');

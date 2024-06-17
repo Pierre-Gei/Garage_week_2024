@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:garage_week_2024/screens/veolia_screen/veolia_screen.dart';
-import 'package:garage_week_2024/services/userServices.dart';
 import '../../models/userModel.dart';
 
+import '../../services/userServices.dart';
 import '../chauffeur_screen/chauffeur_screen.dart';
 import '../client_screen/client_screen.dart';
+import '../veolia_screen/veolia_screen.dart';
 
 void main() {
   runApp(UserLoginPage(userType: 'client'));

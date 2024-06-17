@@ -23,10 +23,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'BinTech APP',
+        title: 'BinTracker',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
-          primarySwatch: Colors.red,
+          primarySwatch: Colors.green,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          useMaterial3: true,
         ),
         home: const ProfileSelectScreen(),
     );

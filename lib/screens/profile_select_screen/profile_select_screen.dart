@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:garage_week_2024/screens/chauffeur_screen/chauffeur_screen.dart';
 import '../login_screen/login_screen.dart';
-import '/screens/client_screen/client_screen.dart';
 
 void main() {
   runApp(const ProfileSelectScreen());
@@ -23,7 +21,9 @@ class ProfileSelectScreen extends StatelessWidget {
     return MaterialApp(
       title: 'Profile Select Screen',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        useMaterial3: true,
       ),
       home: const ProfileSelect(),
     );
@@ -42,7 +42,11 @@ class ProfileSelect extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children:
+          <Widget>[
+            Image.asset('lib/assets/icons/BinTech_Logo.jpg', width: 100, height: 100 ),
+            const SizedBox(height: 20),
+            Image.asset('lib/assets/icons/Véolia.png', width: 100, height: 100 ),
             const Text(
               'Select your profile',
               style: TextStyle(fontSize: 20),

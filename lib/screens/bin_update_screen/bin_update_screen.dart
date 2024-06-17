@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
-import 'package:garage_week_2024/models/benneModel.dart';
-import 'package:garage_week_2024/services/entrepriseServices.dart';
 
+
+import '../../models/benneModel.dart';
 import '../../models/entrepriseModel.dart';
 import '../../services/btService.dart';
+import '../../services/entrepriseServices.dart';
 
 class BinUpdateScreen extends StatefulWidget {
   final Entreprise entreprise;
@@ -114,6 +115,7 @@ class _BinUpdateScreenState extends State<BinUpdateScreen> {
                                           content: Text('Benne n°${selectedBin!.id} mise à jour'),
                                         ),
                                       );
+                                      // Navigate back to the client screen after the update
                                       Navigator.pop(context);
                                     },
                                     child: Text('Mettre à jour'),

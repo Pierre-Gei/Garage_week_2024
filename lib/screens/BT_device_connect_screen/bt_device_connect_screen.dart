@@ -10,6 +10,8 @@ import '../bin_update_screen/bin_update_screen.dart';
 class BtDeviceConnectScreen extends StatefulWidget {
   var entreprise;
 
+  static const routeName = '/btDeviceConnectScreen';
+
   BtDeviceConnectScreen({required this.entreprise});
   @override
   _BtDeviceConnectScreenState createState() => _BtDeviceConnectScreenState();
@@ -18,6 +20,7 @@ class BtDeviceConnectScreen extends StatefulWidget {
 class _BtDeviceConnectScreenState extends State<BtDeviceConnectScreen> {
   late StreamSubscription<bool> _bluetoothStateSubscription;
   bool isBluetoothEnabled = false;
+  bool isScanInitiated = false;
 
   @override
   void initState() {
@@ -61,7 +64,7 @@ class _BtDeviceConnectScreenState extends State<BtDeviceConnectScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                  'Bluetooth is ${isBluetoothEnabled ? 'enabled' : 'disabled'}'),
+                  'Bluetooth ${isBluetoothEnabled ? 'activé' : 'désactivé'}'),
               Switch(
                 value: isBluetoothEnabled,
                 onChanged: (value) async {
@@ -71,30 +74,60 @@ class _BtDeviceConnectScreenState extends State<BtDeviceConnectScreen> {
             ],
           ),
           ElevatedButton(
-            onPressed: isBluetoothEnabled ? () async {
-              await BtService().initBluetooth();
-              await BtService.scan();
-              print('Scanning');
-            } : null,
-            child: const Text('Scan'),
+            onPressed: isBluetoothEnabled
+                ? () async {
+                    await BtService().initBluetooth();
+                    await BtService.scan();
+                    print('Scanning');
+                    setState(() {
+                      isScanInitiated =
+                          true;
+                    });
+                  }
+                : null,
+            child: const Text('rechercher les appareils'),
+          ),
+          ElevatedButton(
+            onPressed: BtService().connectedDevice != null
+                ? () async {
+                    await BtService.disconnect();
+                    print(BtService().connectedDevice);
+                    print('Disconnected');
+                  }
+                : null,
+            child: const Text('Déconnecter le périphérique'),
           ),
           Expanded(
             //get all the available devices and display them in a list
             child: StreamBuilder<List<BluetoothDevice>>(
               stream: BtService.scan(),
               builder: (context, snapshot) {
-                if (isBluetoothEnabled && snapshot.connectionState == ConnectionState.waiting) {
+                if (isBluetoothEnabled &&
+                    snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
                 } else if (!isBluetoothEnabled) {
                   return Center(child: Text('Bluetooth is disabled'));
+                } else if (isBluetoothEnabled &&
+                    snapshot.connectionState == ConnectionState.active &&
+                    !isScanInitiated) {
+                  return Center(
+                      child: Text(
+                          'No scan initiated')); // Add this condition to show a message when no scan is initiated
                 } else {
                   return ListView.builder(
-                    itemCount: (snapshot.data?.length ?? 0) + (snapshot.connectionState == ConnectionState.active ? 1 : 0),
+                    itemCount: (snapshot.data?.length ?? 0) +
+                        (snapshot.connectionState == ConnectionState.active
+                            ? 1
+                            : 0),
                     itemBuilder: (context, index) {
                       if (index < (snapshot.data?.length ?? 0)) {
                         BluetoothDevice device = snapshot.data![index];
-                        bool isConnected = device == BtService().connectedDevice;
+                        bool isConnected =
+                            device == BtService().connectedDevice;
                         return ListTile(
+                          tileColor: isConnected
+                              ? Colors.green
+                              : null, // Change color if device is connected
                           title: Text(device.name ?? ''),
                           subtitle: Text(device.address),
                           onTap: () async {
@@ -103,13 +136,14 @@ class _BtDeviceConnectScreenState extends State<BtDeviceConnectScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => BinUpdateScreen(entreprise: widget.entreprise),
+                                builder: (context) => BinUpdateScreen(
+                                    entreprise: widget.entreprise),
                               ),
                             );
                           },
                         );
                       } else {
-                        if(isBluetoothEnabled) {
+                        if (isBluetoothEnabled) {
                           return ListTile(
                             title: Text('Scanning...'),
                             trailing: const CircularProgressIndicator(),

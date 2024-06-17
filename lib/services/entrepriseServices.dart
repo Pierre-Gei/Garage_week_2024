@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:garage_week_2024/models/entrepriseModel.dart';
 
 import '../models/benneModel.dart';
+import '../models/entrepriseModel.dart';
 
 class EntrepriseServices {
   final CollectionReference _entrepriseCollection =
@@ -151,6 +151,8 @@ class EntrepriseServices {
 
   Future<void> updateBenneFromEntreprise(
       String entrepriseId, Benne newBenne) async {
+    newBenne.emptying = false;
+    newBenne.lastUpdate = DateTime.now();
     DocumentSnapshot docSnapshot =
         await _entrepriseCollection.doc(entrepriseId).get();
     List<dynamic> listBenneDynamic = docSnapshot['listBenne'];
@@ -164,7 +166,9 @@ class EntrepriseServices {
 
       await _entrepriseCollection.doc(entrepriseId).update({
         'listBenne': listBenne.map((benne) => benne.toJson()).toList(),
+
       });
+      print('Benne with id ${newBenne.id} updated in entreprise with id $entrepriseId');
     } else {
       print(
           'Benne with id ${newBenne.id} not found in entreprise with id $entrepriseId');

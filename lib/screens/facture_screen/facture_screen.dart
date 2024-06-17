@@ -9,7 +9,6 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../../models/factureModel.dart';
 import '../../services/factureService.dart';
-import '../veolia_screen/veolia_screen.dart';
 
 class FactureDetailPage extends StatefulWidget {
   final Map<String, dynamic> facture;
@@ -46,9 +45,9 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
           DataGridCell<dynamic>(columnName: columnName, value: newValue);
       _invoiceDataSource.details[rowIndex][columnName] = newValue;
       if (columnName == 'quantity' || columnName == 'unitPrice') {
-        final int quantity = _invoiceDataSource.details[rowIndex]['quantity'];
+        final double quantity = _invoiceDataSource.details[rowIndex]['quantity'].toDouble();
         final double unitPrice =
-            _invoiceDataSource.details[rowIndex]['unitPrice'];
+            _invoiceDataSource.details[rowIndex]['unitPrice'].toDouble();
         _invoiceDataSource.details[rowIndex]['total'] = quantity * unitPrice;
         _invoiceDataSource.buildDataGridRows();
       }
@@ -121,6 +120,7 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
             const Text('Détails:', style: TextStyle(fontSize: 20)),
             Expanded(
               child: SfDataGrid(
+                navigationMode: GridNavigationMode.cell,
                 source: _invoiceDataSource,
                 allowEditing: true,
                 columns: <GridColumn>[
@@ -132,6 +132,7 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
                       child:
                           const Text('Item', overflow: TextOverflow.ellipsis),
                     ),
+                    allowEditing: true,
                   ),
                   GridColumn(
                     columnName: 'quantity',
@@ -141,6 +142,7 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
                       child: const Text('Quantité',
                           overflow: TextOverflow.ellipsis),
                     ),
+                    allowEditing: true,
                   ),
                   GridColumn(
                     columnName: 'unitPrice',
@@ -150,6 +152,7 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
                       child: const Text('Prix Unitaire',
                           overflow: TextOverflow.ellipsis),
                     ),
+                    allowEditing: true,
                   ),
                   GridColumn(
                     columnName: 'total',
@@ -159,6 +162,7 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
                       child:
                           const Text('Total', overflow: TextOverflow.ellipsis),
                     ),
+                    allowEditing: true,
                   ),
                   GridColumn(
                     columnName: 'delete',
@@ -241,5 +245,67 @@ class FacturesPage extends StatelessWidget {
         return scaffold;
       },
     );
+  }
+}
+
+class InvoiceDataSource extends DataGridSource {
+  InvoiceDataSource(this.details, this.updateCell, this.removeRow) {
+    buildDataGridRows();
+  }
+
+  List<Map<String, dynamic>> details;
+  List<DataGridRow> dataGridRows = [];
+  final Function(DataGridCell<dynamic>, dynamic) updateCell;
+  final Function(int) removeRow;
+
+  void buildDataGridRows() {
+    dataGridRows = details.map<DataGridRow>((item) {
+      return DataGridRow(cells: [
+        DataGridCell<String>(columnName: 'item', value: item['item']),
+        DataGridCell<int>(columnName: 'quantity', value: item['quantity']),
+        DataGridCell<double>(columnName: 'unitPrice', value: item['unitPrice']),
+        DataGridCell<double>(columnName: 'total', value: item['total']),
+        const DataGridCell<Icon>(columnName: 'delete', value: Icon(Icons.delete)),
+      ]);
+    }).toList();
+    notifyListeners();
+  }
+
+  @override
+  List<DataGridRow> get rows => dataGridRows;
+
+  @override
+  DataGridRowAdapter buildRow(DataGridRow row) {
+    return DataGridRowAdapter(cells: row.getCells().map<Widget>((dataGridCell) {
+      if (dataGridCell.columnName == 'delete') {
+        final index = dataGridRows.indexOf(row);
+        return IconButton(
+          icon: const Icon(Icons.delete),
+          onPressed: () {
+            removeRow(index);
+          },
+        );
+      }
+      return Container(
+        alignment: (dataGridCell.columnName == 'quantity' || dataGridCell.columnName == 'unitPrice' || dataGridCell.columnName == 'total')
+            ? Alignment.centerRight
+            : Alignment.centerLeft,
+        padding: const EdgeInsets.all(8.0),
+        child: Text(dataGridCell.value.toString(), overflow: TextOverflow.ellipsis),
+      );
+    }).toList());
+  }
+
+  @override
+  Future<void> onCellSubmit(DataGridRow dataGridRow, RowColumnIndex rowColumnIndex, GridColumn column) async {
+    final cell = dataGridRow.getCells().firstWhere((DataGridCell cell) => cell.columnName == column.columnName);
+    final newValue = cell.value; // Get the new value from the cell
+    handleCellSubmit(dataGridRow, column.columnName, newValue); // Call handleCellSubmit with the new value
+  }
+
+  void handleCellSubmit(DataGridRow row, String columnName, dynamic newValue) {
+    // Handle cell submit here
+    updateCell(row.getCells().firstWhere((cell) => cell.columnName == columnName), newValue);
+    // Update the value of the cell in the data source
   }
 }

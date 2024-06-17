@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:garage_week_2024/models/entrepriseModel.dart';
-import 'package:garage_week_2024/widgets/_confirmLogout.dart';
-import 'package:garage_week_2024/models/userModel.dart';
-import 'package:garage_week_2024/screens/BT_device_connect_screen/bt_device_connect_screen.dart';
-import 'package:garage_week_2024/services/entrepriseServices.dart';
+
 
 import '../../models/benneModel.dart';
+import '../../models/entrepriseModel.dart';
+import '../../models/userModel.dart';
+import '../../services/entrepriseServices.dart';
+import '../../widgets/_confirmLogout.dart';
+import '../BT_device_connect_screen/bt_device_connect_screen.dart';
 
 class ClientScreen extends StatelessWidget {
   final User user;
+  static const routeName = '/clientScreen';
   ClientScreen({required this.user, Key? key}) : super(key: key);
 
   @override
@@ -17,7 +19,9 @@ class ClientScreen extends StatelessWidget {
     return MaterialApp(
       title: 'Profile Select Screen',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        useMaterial3: true,
       ),
       home: ClientInfo(user),
     );
@@ -25,6 +29,7 @@ class ClientScreen extends StatelessWidget {
 }
 
 class ClientInfo extends StatefulWidget {
+
   final User user;
   ClientInfo(this.user, {Key? key}) : super(key: key);
 
@@ -34,6 +39,7 @@ class ClientInfo extends StatefulWidget {
 
 class _ClientInfoState extends State<ClientInfo> {
   ValueNotifier<Future<Entreprise>>? entrepriseFutureNotifier;
+
 
   @override
   void initState() {

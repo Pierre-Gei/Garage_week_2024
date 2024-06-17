@@ -70,6 +70,10 @@ class BtService {
     print('Scanning done');
   }
 
+  List<BluetoothDevice> getConnecectedDevice() {
+    return _devicesList;
+  }
+
   List<BluetoothDevice> getDevicesList() {
     return _devicesList;
   }
@@ -126,17 +130,10 @@ class BtService {
     return _connection?.input?.transform(
           StreamTransformer.fromHandlers(
             handleData: (Uint8List data, EventSink<Map<String, String>> sink) {
-              // Decode the incoming data
               final String incomingData = utf8.decode(data);
               print('Incoming data: $incomingData');
-
-              // Parse the incoming data
               Map<String, String> parsedData = parseArduinoData(incomingData);
-
-              // Print the parsed data
               print('Parsed data: $parsedData');
-
-              // Add the parsed data to the sink
               sink.add(parsedData);
             },
           ),
