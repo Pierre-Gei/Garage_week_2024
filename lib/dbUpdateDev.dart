@@ -1,11 +1,9 @@
+import 'package:garage_week_2024/models/benneModel.dart';
+import 'package:garage_week_2024/models/entrepriseModel.dart';
+import 'package:garage_week_2024/services/entrepriseServices.dart';
+import 'package:garage_week_2024/services/factureService.dart';
+import 'package:garage_week_2024/services/userServices.dart';
 
-
-import 'package:BinTracker/services/entrepriseServices.dart';
-import 'package:BinTracker/services/factureService.dart';
-import 'package:BinTracker/services/userServices.dart';
-
-import 'models/benneModel.dart';
-import 'models/entrepriseModel.dart';
 import 'models/factureModel.dart';
 import 'models/userModel.dart';
 
