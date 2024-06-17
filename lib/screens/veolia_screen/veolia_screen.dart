@@ -11,6 +11,7 @@ import '../../widgets/_confirmLogout.dart';
 import '../facture_screen/facture_screen.dart';
 import '../planning_screen/planning_screen.dart';
 import '../stats_screen/stats_screen.dart';
+import '../veolia_benne_list_screen/veolia_benne_list_screen.dart';
 
 class Veolia_screen extends StatelessWidget {
   const Veolia_screen({Key? key, required User user}) : super(key: key);
@@ -61,7 +62,6 @@ class Veolia_info extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const PlanningPage()),
                 );
               },
-              child: const Text('Planning'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 textStyle: const TextStyle(fontSize: 18),
@@ -69,6 +69,7 @@ class Veolia_info extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15),
                 ),
               ),
+              child: const Text('Planning'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -78,7 +79,6 @@ class Veolia_info extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const FacturesPage()),
                 );
               },
-              child: const Text('Factures'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 textStyle: const TextStyle(fontSize: 18),
@@ -86,6 +86,7 @@ class Veolia_info extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15),
                 ),
               ),
+              child: const Text('Factures'),
             ),
             const SizedBox(height: 10),
             const FacturesPreview(),
@@ -98,7 +99,6 @@ class Veolia_info extends StatelessWidget {
                       builder: (context) => const StatistiquesPage()),
                 );
               },
-              child: const Text('Statistiques'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 textStyle: const TextStyle(fontSize: 18),
@@ -106,6 +106,26 @@ class Veolia_info extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15),
                 ),
               ),
+
+              child: const Text('Statistiques'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => VeoliaBenneListScreen()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                textStyle: const TextStyle(fontSize: 18),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              child: const Text('Liste des bennes'),
             ),
           ],
         ),
@@ -125,21 +145,21 @@ class FacturesPreview extends StatelessWidget {
       future: factureServices.getAllFactures(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // Show loading spinner while waiting for data
+          return const CircularProgressIndicator(); // Show loading spinner while waiting for data
         } else if (snapshot.hasError) {
           return Text(
               'Error: ${snapshot.error}'); // Show error message if there's an error
         } else {
           final factures = snapshot.data;
           if (factures == null || factures.isEmpty) {
-            return Text(
-                'No factures found'); // Show message if no factures are found
+            return const Text(
+                'Pas de factures disposables'); // Show message if no factures are found
           } else {
             return Column(
               children: factures.map((facture) {
                 return ListTile(
                   title: Text(facture.title),
-                  subtitle: Text('Amount: ${facture.amount} €'),
+                  subtitle: Text('Quantité: ${facture.amount} €'),
                   onTap: () {
                     Navigator.push(
                       context,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 
+import '../../globals.dart';
 import '../../models/benneModel.dart';
 import '../../models/entrepriseModel.dart';
 import '../../services/btService.dart';
@@ -41,15 +42,49 @@ class _BinUpdateScreenState extends State<BinUpdateScreen> {
 
     // Check if any of the fetched bins have a BluetoothDeviceSerial that matches the one from the Bluetooth device
     selectedBin = fetchedBins.firstWhere(
-        (bin) => bin.BluetoothDeviceSerial == btDeviceSerial,
+            (bin) => bin.BluetoothDeviceSerial == btDeviceSerial,
         orElse: () => Benne(
-              id: '',
-              fullness: 0.0,
-              type: '',
-              location: '',
-              client: '',
-              emptying: false,
-            ));
+          id: '',
+          fullness: 0.0,
+          type: '',
+          location: '',
+          client: '',
+          emptying: false,
+        ));
+
+    // If the selected bin has a valid id (i.e., it exists in the database), show a confirmation dialog
+    if (selectedBin!.id.isNotEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Confirmer la mise à jour de la benne'),
+            content: Text('Voulez-vous mettre à jour la benne n°${selectedBin!.id} ?'
+                'Nouveau taux de remplissage: ${bluetoothData['fillRate']}'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Annuler'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('OK'),
+                onPressed: () async {
+                  // Update the bin
+                  selectedBin!.fullness = double.parse(bluetoothData['fillRate'] ?? '0');
+                  selectedBin!.BluetoothDeviceSerial = bluetoothData['serialNumber'] ?? '';
+                  await EntrepriseServices().updateBenneFromEntreprise(widget.entreprise.id, selectedBin!);
+                  Navigator.of(context).pop();
+                  binUpdateNotifier.value = selectedBin;
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     setState(() {
       bins = fetchedBins;
     });
@@ -59,7 +94,7 @@ class _BinUpdateScreenState extends State<BinUpdateScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bin Update Screen'),
+        title: const Text('Mise à jour des bennes'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0), // Add your desired padding here
@@ -110,6 +145,7 @@ class _BinUpdateScreenState extends State<BinUpdateScreen> {
                                       selectedBin!.BluetoothDeviceSerial = bluetoothData['serialNumber'] ?? '';
                                       EntrepriseServices().updateBenneFromEntreprise(widget.entreprise.id, selectedBin!);
                                       // Show a snackbar to confirm the update
+                                      binUpdateNotifier.value = selectedBin;
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
                                           content: Text('Benne n°${selectedBin!.id} mise à jour'),
@@ -118,7 +154,7 @@ class _BinUpdateScreenState extends State<BinUpdateScreen> {
                                       // Navigate back to the client screen after the update
                                       Navigator.pop(context);
                                     },
-                                    child: Text('Mettre à jour'),
+                                    child: const Text('Mettre à jour'),
                                   ),
                                 ],
                               ),

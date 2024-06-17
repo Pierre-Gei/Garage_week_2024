@@ -183,10 +183,6 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
               onPressed: _addRow,
               child: const Text('Ajouter une ligne'),
             ),
-            ElevatedButton(
-              onPressed: _exportToCSV,
-              child: const Text('Exporter en CSV'),
-            ),
           ],
         ),
       ),
