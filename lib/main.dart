@@ -13,7 +13,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await initializeDateFormatting('fr_FR', null);
-  addUserToDatabase();
+  //addUserToDatabase();
   runApp(const ProfileSelectScreen());
 }
 
