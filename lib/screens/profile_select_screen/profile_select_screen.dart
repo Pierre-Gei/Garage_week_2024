@@ -42,11 +42,23 @@ class ProfileSelect extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children:
-          <Widget>[
-            Image.asset('lib/assets/icons/BinTech_Logo.jpg', width: 100, height: 100 ),
-            const SizedBox(height: 20),
-            Image.asset('lib/assets/icons/Véolia.png', width: 100, height: 100 ),
+          children: <Widget>[
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage:
+                      AssetImage('lib/assets/icons/BinTech_Logo.jpg'),
+                ),
+                SizedBox(width: 20),
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: AssetImage('lib/assets/icons/Véolia.png'),
+                  backgroundColor: Colors.white,
+                ),
+              ],
+            ),
             const Text(
               'Select your profile',
               style: TextStyle(fontSize: 20),
@@ -56,22 +68,43 @@ class ProfileSelect extends StatelessWidget {
                 debugPrint('client');
                 const ProfileSelectScreen()._navigateToLogin(context, 'client');
               },
-              child: const Text('client'),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.person), // Add your desired icon here
+                  const SizedBox(width: 10),
+                  const Text('client', style: TextStyle(fontSize: 20)),
+                ],
+              ),
             ),
-
             ElevatedButton(
               onPressed: () {
                 debugPrint('chauffeur');
-                const ProfileSelectScreen()._navigateToLogin(context, 'chauffeur');
+                const ProfileSelectScreen()
+                    ._navigateToLogin(context, 'chauffeur');
               },
-              child: const Text('chauffeur'),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.drive_eta), // Add your desired icon here
+                  const SizedBox(width: 10),
+                  const Text('chauffeur', style: TextStyle(fontSize: 20)),
+                ],
+              ),
             ),
             ElevatedButton(
               onPressed: () {
                 debugPrint('véolia');
                 const ProfileSelectScreen()._navigateToLogin(context, 'veolia');
               },
-              child: const Text('veolia'),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.business), // Add your desired icon here
+                  const SizedBox(width: 10),
+                  const Text('véolia', style: TextStyle(fontSize: 20)),
+                ],
+              ),
             ),
           ],
         ),
