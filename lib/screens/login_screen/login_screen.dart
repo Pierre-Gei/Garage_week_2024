@@ -28,6 +28,28 @@ class UserLoginPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage:
+                      AssetImage('lib/assets/icons/BinTech_Logo.jpg'),
+                ),
+                SizedBox(width: 20),
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: AssetImage('lib/assets/icons/Véolia.png'),
+                  backgroundColor: Colors.white,
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Veuillez vous connecter',
+              style: TextStyle(fontSize: 20),
+            ),
+            const SizedBox(height: 20),
             TextField(
               controller: usernameController,
               decoration: const InputDecoration(
@@ -76,8 +98,7 @@ class UserLoginPage extends StatelessWidget {
                         builder: (context) => Veolia_screen(user: user),
                       ),
                     );
-                  }
-                  else {
+                  } else {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) => UserLoginPage(userType: 'client'),

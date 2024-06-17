@@ -37,7 +37,11 @@ class ProfileSelect extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile Select Screen'),
+        backgroundColor: const Color.fromARGB(255, 198, 222, 226),
+        title: Center(
+          child: Image.asset('lib/assets/icons/BinTech_Logo.jpg',
+              height: 50, width: 50, fit: BoxFit.cover),
+        ),
       ),
       body: Center(
         child: Column(
@@ -59,10 +63,12 @@ class ProfileSelect extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 20),
             const Text(
-              'Select your profile',
+              'Choisissez votre profil',
               style: TextStyle(fontSize: 20),
             ),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 debugPrint('client');
