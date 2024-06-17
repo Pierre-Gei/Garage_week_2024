@@ -39,7 +39,7 @@ class Veolia_info extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _requestPermissions(); // Demande les permissions lors de l'ouverture de l'application
+    _requestPermissions();
     return Scaffold(
       appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 198, 222, 226),

@@ -4,7 +4,6 @@ import '../../models/entrepriseModel.dart';
 import '../../models/userModel.dart';
 import '../../services/entrepriseServices.dart';
 import '../../widgets/_confirmLogout.dart';
-import '../login_screen/login_screen.dart';
 
 class ChauffeurScreen extends StatelessWidget {
   const ChauffeurScreen({Key? key, required User user}) : super(key: key);
@@ -61,7 +60,7 @@ Future<void> _addNewBin(
     lastUpdate: DateTime.now(),
   );
   await EntrepriseServices().addBenneToEntreprise(entreprise.id, newBin);
-  await _loadData(); // Reload the data after adding a new bin
+  await _loadData();
 }
 
   Future<void> _removeBin(int index) async {
@@ -71,7 +70,7 @@ Future<void> _addNewBin(
     bins.removeAt(index);
     await EntrepriseServices().removeBenneFromEntreprise(
         entreprise.id, binToRemove);
-    await _loadData(); // Reload the data after removing a bin
+    await _loadData();
   }
 
   void _showBinOptions(BuildContext context, Benne bin, Entreprise entreprise, additionalArgument) {
@@ -91,7 +90,6 @@ Future<void> _addNewBin(
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  // Show the bin info in a box
                   _ShowBinInfo(context, bin, entreprise);
                   Navigator.pop(context);
                 },
@@ -107,13 +105,9 @@ Future<void> _addNewBin(
               const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () async {
-                  // Find the index of the bin in the _bins list
                   int index = (await _bins).indexWhere(
                       (newbin) => newbin.id == bin.id && newbin.location == bin.location);
-
-                  // Remove the bin from the _bins list
                   _removeBin(index);
-                  // Remove the bin from the database
                   EntrepriseServices()
                       .removeBenneFromEntreprise(entreprise.id, bin);
                   Navigator.pop(context);
@@ -226,7 +220,6 @@ Future<void> _addNewBin(
 
   @override
   Widget build(BuildContext context) {
-    // Regroupement et tri des bennes par niveau de remplissage
     final Map<String, List<Benne>> binsByCity = {};
     _bins.forEach((bin) {
       if (!binsByCity.containsKey(bin.location)) {
@@ -243,7 +236,7 @@ Future<void> _addNewBin(
           child: Image.asset('lib/assets/icons/BinTech_Logo.jpg',
               height: 50, width: 50, fit: BoxFit.cover),
         ),
-        actions: [
+        actions: const [
           SizedBox(width: 57),
         ]
       ),

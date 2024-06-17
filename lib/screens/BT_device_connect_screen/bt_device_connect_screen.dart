@@ -98,7 +98,6 @@ class _BtDeviceConnectScreenState extends State<BtDeviceConnectScreen> {
             child: const Text('Déconnecter le périphérique'),
           ),
           Expanded(
-            //get all the available devices and display them in a list
             child: StreamBuilder<List<BluetoothDevice>>(
               stream: BtService.scan(),
               builder: (context, snapshot) {
@@ -112,7 +111,7 @@ class _BtDeviceConnectScreenState extends State<BtDeviceConnectScreen> {
                     !isScanInitiated) {
                   return Center(
                       child: Text(
-                          'No scan initiated')); // Add this condition to show a message when no scan is initiated
+                          'No scan initiated'));
                 } else {
                   return ListView.builder(
                     itemCount: (snapshot.data?.length ?? 0) +
@@ -127,12 +126,11 @@ class _BtDeviceConnectScreenState extends State<BtDeviceConnectScreen> {
                         return ListTile(
                           tileColor: isConnected
                               ? Colors.green
-                              : null, // Change color if device is connected
+                              : null,
                           title: Text(device.name ?? ''),
                           subtitle: Text(device.address),
                           onTap: () async {
                             await BtService.connect(device);
-                            //get the data from the device and check if it is a valid device and then navigate to the next screen
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -144,12 +142,12 @@ class _BtDeviceConnectScreenState extends State<BtDeviceConnectScreen> {
                         );
                       } else {
                         if (isBluetoothEnabled) {
-                          return ListTile(
+                          return const ListTile(
                             title: Text('Scanning...'),
-                            trailing: const CircularProgressIndicator(),
+                            trailing: CircularProgressIndicator(),
                           );
                         } else {
-                          return ListTile(
+                          return const ListTile(
                             title: Text('Bluetooth is disabled'),
                           );
                         }

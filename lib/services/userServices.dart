@@ -72,7 +72,7 @@ class UserServices {
   Future<List<User>> getAllUser() async {
     QuerySnapshot querySnapshot = await _userCollection.get();
     List<User> users = [];
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       users.add(User(
         id: doc.id,
         login: doc['login'],
@@ -82,7 +82,7 @@ class UserServices {
         role: doc['role'],
         entrepriseId: doc['entrepriseId'],
       ));
-    });
+    }
     return users;
   }
 

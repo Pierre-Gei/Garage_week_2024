@@ -73,10 +73,6 @@ class UserLoginPage extends StatelessWidget {
                 String password = passwordController.text;
                 bool userExists = await UserServices()
                     .checkUser(username, password, userType);
-                print('Username: $username');
-                print('Password: $password');
-                print('User type: $userType');
-                print('User exists: $userExists');
                 if (userExists) {
                   User user = await UserServices().getUser(username);
                   if (userType == 'client') {
@@ -92,7 +88,6 @@ class UserLoginPage extends StatelessWidget {
                       ),
                     );
                   } else if (userType == 'veolia') {
-                    print('go to veolia screen');
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) => Veolia_screen(user: user),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../screens/profile_select_screen/profile_select_screen.dart';
 
 class ConfirmLogout extends StatelessWidget {
-  const ConfirmLogout({Key? key}) : super(key: key);
+  const ConfirmLogout({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +10,6 @@ class ConfirmLogout extends StatelessWidget {
     IconButton(
       icon: const Icon(Icons.logout),
       onPressed: () {
-        // Show the logout confirmation dialog
         _confirmLogout(context);
       },
     );

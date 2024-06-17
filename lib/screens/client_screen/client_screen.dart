@@ -12,7 +12,7 @@ import '../BT_device_connect_screen/bt_device_connect_screen.dart';
 class ClientScreen extends StatelessWidget {
   final User user;
   static const routeName = '/clientScreen';
-  ClientScreen({required this.user, Key? key}) : super(key: key);
+  const ClientScreen({required this.user, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,22 +50,18 @@ class _ClientInfoState extends State<ClientInfo> {
 
   @override
   void dispose() {
-    // Remove the listener when the widget is disposed
     binUpdateNotifier.removeListener(_updateBinData);
     super.dispose();
   }
 
   Future<void> _updateBinData() async {
-    // Get the updated bin
     Benne? updatedBin = binUpdateNotifier.value;
     if (updatedBin != null) {
-      // Find the index of the bin in the list
       Entreprise entreprise = await EntrepriseServices()
           .getEntrepriseById(widget.user.entrepriseId);
       int index =
           entreprise.listBenne.indexWhere((bin) => bin.id == updatedBin.id);
       if (index != -1) {
-        // Update the bin in the list
         setState(() {
           entreprise.listBenne[index] = updatedBin;
         });
@@ -76,13 +72,10 @@ class _ClientInfoState extends State<ClientInfo> {
   DateTime nextSelectableDate() {
     DateTime now = DateTime.now();
     if (now.weekday == 6) {
-      // If it's Saturday, return Monday's date
-      return now.add(Duration(days: 2));
+      return now.add(const Duration(days: 2));
     } else if (now.weekday == 7) {
-      // If it's Sunday, return Monday's date
-      return now.add(Duration(days: 1));
+      return now.add(const Duration(days: 1));
     } else {
-      // If it's a weekday, return the current date
       return now;
     }
   }
@@ -175,8 +168,6 @@ class _ClientInfoState extends State<ClientInfo> {
                                                       Text(
                                                           'Vidage prévu: ${benne.emptying ? 'Oui' : 'Non'}'),
                                                       ElevatedButton(
-                                                        child: Text(
-                                                            'Demander le vidage'),
                                                         onPressed:
                                                             benne.emptying
                                                                 ? null
@@ -227,6 +218,8 @@ class _ClientInfoState extends State<ClientInfo> {
                                                                               .entrepriseId);
                                                                     }
                                                                   },
+                                                        child: const Text(
+                                                            'Demander le vidage'),
                                                       ),
                                                     ],
                                                   ),
@@ -255,13 +248,13 @@ class _ClientInfoState extends State<ClientInfo> {
                                                     backgroundColor:
                                                         Colors.grey,
                                                     valueColor:
-                                                        AlwaysStoppedAnimation<
+                                                        const AlwaysStoppedAnimation<
                                                                 Color>(
                                                             Colors.green),
                                                   ),
                                                   Text(
                                                     '${(benne.fullness * 100).toStringAsFixed(1)}%',
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         color: Colors.white),
                                                   ),
                                                 ],

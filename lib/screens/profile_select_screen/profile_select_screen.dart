@@ -74,12 +74,12 @@ class ProfileSelect extends StatelessWidget {
                 debugPrint('client');
                 const ProfileSelectScreen()._navigateToLogin(context, 'client');
               },
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Icon(Icons.person), // Add your desired icon here
-                  const SizedBox(width: 10),
-                  const Text('client', style: TextStyle(fontSize: 20)),
+                  SizedBox(width: 10),
+                  Text('client', style: TextStyle(fontSize: 20)),
                 ],
               ),
             ),
@@ -89,12 +89,12 @@ class ProfileSelect extends StatelessWidget {
                 const ProfileSelectScreen()
                     ._navigateToLogin(context, 'chauffeur');
               },
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Icon(Icons.drive_eta), // Add your desired icon here
-                  const SizedBox(width: 10),
-                  const Text('chauffeur', style: TextStyle(fontSize: 20)),
+                  SizedBox(width: 10),
+                  Text('chauffeur', style: TextStyle(fontSize: 20)),
                 ],
               ),
             ),
@@ -103,12 +103,12 @@ class ProfileSelect extends StatelessWidget {
                 debugPrint('véolia');
                 const ProfileSelectScreen()._navigateToLogin(context, 'veolia');
               },
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Icon(Icons.business), // Add your desired icon here
-                  const SizedBox(width: 10),
-                  const Text('véolia', style: TextStyle(fontSize: 20)),
+                  SizedBox(width: 10),
+                  Text('véolia', style: TextStyle(fontSize: 20)),
                 ],
               ),
             ),

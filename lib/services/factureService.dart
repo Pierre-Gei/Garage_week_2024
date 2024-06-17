@@ -20,6 +20,4 @@ class FactureServices {
     QuerySnapshot querySnapshot = await _factureCollection.get();
     return querySnapshot.docs.map((doc) => Facture.fromJson(doc.data() as Map<String, dynamic> ?? {})).toList();
   }
-
-  // Add more methods as needed for your application
 }

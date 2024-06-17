@@ -6,7 +6,7 @@ import '../../services/entrepriseServices.dart';
 
 
 class VeoliaBenneListScreen extends StatefulWidget {
-  VeoliaBenneListScreen({Key? key}) : super(key: key);
+  const VeoliaBenneListScreen({Key? key}) : super(key: key);
 
   @override
   _VeoliaBenneListScreenState createState() => _VeoliaBenneListScreenState();
@@ -30,7 +30,6 @@ class _VeoliaBenneListScreenState extends State<VeoliaBenneListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Regroupement et tri des bennes par niveau de remplissage
     final Map<String, List<Benne>> binsByCity = {};
     _bins.forEach((bin) {
       if (!binsByCity.containsKey(bin.location)) {
@@ -43,7 +42,7 @@ class _VeoliaBenneListScreenState extends State<VeoliaBenneListScreen> {
       appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 198, 222, 226),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -52,7 +51,7 @@ class _VeoliaBenneListScreenState extends State<VeoliaBenneListScreen> {
             child: Image.asset('lib/assets/icons/BinTech_Logo.jpg',
                 height: 50, width: 50, fit: BoxFit.cover),
           ),
-          actions: [
+          actions: const [
             SizedBox(width: 57),
           ]),
       body: Padding(

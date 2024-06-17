@@ -99,7 +99,7 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
           .showSnackBar(SnackBar(content: Text('Fichier CSV exporté: $path')));
     } else {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Permission refusée')));
+          .showSnackBar(const SnackBar(content: Text('Permission refusée')));
     }
   }
 
@@ -214,17 +214,17 @@ class FacturesPage extends StatelessWidget {
             body = const Text('Aucune facture trouvée');
           } else {
             body = ListView.builder(
-              itemCount: factures?.length,
+              itemCount: factures.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(factures?[index].title ?? ''),
-                  subtitle: Text('Montant: ${factures?[index].amount} €'),
+                  title: Text(factures[index].title ?? ''),
+                  subtitle: Text('Montant: ${factures[index].amount} €'),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => FactureDetailPage(
-                            facture: factures?[index].toMap() ?? {}),
+                            facture: factures[index].toMap() ?? {}),
                       ),
                     );
                   },
@@ -295,13 +295,11 @@ class InvoiceDataSource extends DataGridSource {
   @override
   Future<void> onCellSubmit(DataGridRow dataGridRow, RowColumnIndex rowColumnIndex, GridColumn column) async {
     final cell = dataGridRow.getCells().firstWhere((DataGridCell cell) => cell.columnName == column.columnName);
-    final newValue = cell.value; // Get the new value from the cell
-    handleCellSubmit(dataGridRow, column.columnName, newValue); // Call handleCellSubmit with the new value
+    final newValue = cell.value;
+    handleCellSubmit(dataGridRow, column.columnName, newValue);
   }
 
   void handleCellSubmit(DataGridRow row, String columnName, dynamic newValue) {
-    // Handle cell submit here
     updateCell(row.getCells().firstWhere((cell) => cell.columnName == columnName), newValue);
-    // Update the value of the cell in the data source
   }
 }

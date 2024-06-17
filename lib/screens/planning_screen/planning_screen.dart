@@ -83,27 +83,27 @@ class _PlanningPageState extends State<PlanningPage> {
                   ),
                   TimePlannerTitle(
                     title: DateFormat('dd-MM-yy')
-                        .format(DateTime.now().add(Duration(days: 1))),
+                        .format(DateTime.now().add(const Duration(days: 1))),
                   ),
                   TimePlannerTitle(
                     title: DateFormat('dd-MM-yy')
-                        .format(DateTime.now().add(Duration(days: 2))),
+                        .format(DateTime.now().add(const Duration(days: 2))),
                   ),
                   TimePlannerTitle(
                     title: DateFormat('dd-MM-yy')
-                        .format(DateTime.now().add(Duration(days: 3))),
+                        .format(DateTime.now().add(const Duration(days: 3))),
                   ),
                   TimePlannerTitle(
                     title: DateFormat('dd-MM-yy')
-                        .format(DateTime.now().add(Duration(days: 4))),
+                        .format(DateTime.now().add(const Duration(days: 4))),
                   ),
                   TimePlannerTitle(
                     title: DateFormat('dd-MM-yy')
-                        .format(DateTime.now().add(Duration(days: 5))),
+                        .format(DateTime.now().add(const Duration(days: 5))),
                   ),
                   TimePlannerTitle(
                     title: DateFormat('dd-MM-yy')
-                        .format(DateTime.now().add(Duration(days: 6))),
+                        .format(DateTime.now().add(const Duration(days: 6))),
                   ),
                 ],
                 tasks: tasks,

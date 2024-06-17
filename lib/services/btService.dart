@@ -53,7 +53,6 @@ class BtService {
   static Stream<List<BluetoothDevice>> scan() async* {
     bool isDiscovering = true;
     do {
-      // Stop any ongoing scan
       await _bluetooth.cancelDiscovery();
 
       _devicesList = [];
@@ -67,7 +66,6 @@ class BtService {
       isDiscovering = (await _bluetooth.isDiscovering)!;
     } while (isDiscovering);
     isDiscovering = false;
-    print('Scanning done');
   }
 
   List<BluetoothDevice> getConnecectedDevice() {
@@ -85,8 +83,6 @@ class BtService {
       _connectedDeviceController.add(device);
     } catch (e) {
       if (e is PlatformException) {
-        print('Failed to connect: ${e.message}');
-        // Handle the exception, e.g., by showing an error message to the user
       } else {
         rethrow;
       }
@@ -105,8 +101,6 @@ class BtService {
   }
 
   Map<String, String> parseArduinoData(String data) {
-    print('Raw data: $data'); // Print the raw data
-
     final serialNumberRegex = RegExp(r'Numéro de série: (\w+),');
     final fillRateRegex = RegExp(r'Taux de remplissage: (\d+) %');
 
@@ -115,11 +109,6 @@ class BtService {
 
     String serialNumber = serialNumberMatch?.group(1) ?? '';
     String fillRate = fillRateMatch?.group(1) ?? '';
-
-    print(
-        'Parsed serial number: $serialNumber'); // Print the parsed serial number
-    print('Parsed fill rate: $fillRate'); // Print the parsed fill rate
-
     return {
       'serialNumber': serialNumber,
       'fillRate': fillRate,
@@ -131,53 +120,42 @@ class BtService {
           StreamTransformer.fromHandlers(
             handleData: (Uint8List data, EventSink<Map<String, String>> sink) {
               final String incomingData = utf8.decode(data);
-              print('Incoming data: $incomingData');
               Map<String, String> parsedData = parseArduinoData(incomingData);
-              print('Parsed data: $parsedData');
               sink.add(parsedData);
             },
           ),
         ) ??
-        Stream.empty();
+        const Stream.empty();
   }
 
   Future<Map<String, String>> getBluetoothData() async {
-  print('Getting Bluetooth data');
-  print('getBluetoothData called from ${StackTrace.current}'); // Add this line
   Map<String, String> bluetoothData = {'serialNumber': '', 'fillRate': ''};
   if (_connection == null) {
-    print('No Bluetooth device connected');
     return bluetoothData;
   }
   await Future.any([
     receiveData.first.then((data) {
       bluetoothData = data;
     }).onError((error, stackTrace) {
-      print('Error receiving data: $error');
     }),
-    Future.delayed(Duration(seconds: 10), () {
+    Future.delayed(const Duration(seconds: 10), () {
       if (bluetoothData['serialNumber'] == '' || bluetoothData['fillRate'] == '') {
         throw TimeoutException('Failed to get Bluetooth data within 10 seconds');
       }
     })
   ]);
-  print('Bluetooth data: $bluetoothData');
   return bluetoothData;
 }
 
   Future<String> getBluetoothTauxRemplissage() async {
-    print('Getting fill rate');
     String fillRate = '';
     if (_connection == null) {
-      print('No Bluetooth device connected');
       return fillRate;
     }
     await receiveData.first.then((data) {
       fillRate = data['fillRate'] ?? '';
     }).onError((error, stackTrace) {
-      print('Error receiving data: $error');
     });
-    print('Fill rate: $fillRate');
     return fillRate;
   }
 }
