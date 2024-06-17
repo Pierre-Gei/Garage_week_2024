@@ -7,6 +7,8 @@ import 'package:garage_week_2024/services/userServices.dart';
 import 'models/factureModel.dart';
 import 'models/userModel.dart';
 
+//ajout des données de test dans la base de données
+//pour les tests UNIQUEMENT !
 void addUserToDatabase() async {
   var userServices = UserServices();
   await userServices.addUser(User(

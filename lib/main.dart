@@ -5,6 +5,8 @@ import 'dbUpdateDev.dart';
 import 'firebase_options.dart';
 import 'screens/profile_select_screen/profile_select_screen.dart';
 
+
+//fichier de lancement de l'application
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();  // Add this line
   await Firebase.initializeApp(
@@ -15,9 +17,9 @@ void main() async {
   runApp(const ProfileSelectScreen());
 }
 
-
+//classe principale de l'application
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {

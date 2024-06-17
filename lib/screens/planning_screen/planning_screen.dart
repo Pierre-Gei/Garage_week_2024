@@ -6,6 +6,7 @@ import 'package:time_planner/time_planner.dart';
 import '../../models/benneModel.dart';
 import '../../services/entrepriseServices.dart';
 
+//classe de l'écran de la planification
 class PlanningPage extends StatefulWidget {
   const PlanningPage({super.key});
 
@@ -14,37 +15,43 @@ class PlanningPage extends StatefulWidget {
 }
 
 class _PlanningPageState extends State<PlanningPage> {
+  //liste des tâches
   List<TimePlannerTask> tasks = [];
 
+  //chargement des données
   @override
   void initState() {
     super.initState();
     LoadData().fetchData().then((bins) {
+      //création des tâches pour chaque benne
       for (var bin in bins) {
         var newTask = TimePlannerTask(
           color: Colors.blue,
           minutesDuration: 60,
           daysDuration: 1,
           dateTime: TimePlannerDateTime(
+            //calcul de la date de la tâche en fonction de la date de vidage de la benne
             day: bin.emptyingDate!.difference(DateTime.now()).inDays,
             hour: bin.emptyingDate!.hour.toInt(),
             minutes: 0,
           ),
           child: Text('benne-${bin.id} à ${bin.location}'),
         );
-
+        //Evite les tâches qui commencent avant 8h
         if (newTask.dateTime.hour < 8) {
           newTask.dateTime.hour = 8;
         }
-
+        //Evite les tâches qui se chevauchent
         if (!doesTaskOverlap(newTask)) {
           tasks.add(newTask);
         }
       }
-      setState(() {}); // Notify the framework that the internal state of this object has changed.
+      //rafraîchissement de l'écran
+      setState(() {});
     });
   }
 
+  //vérifie si une tâche se chevauche
   bool doesTaskOverlap(TimePlannerTask newTask) {
     for (var task in tasks) {
       if (task.dateTime.day == newTask.dateTime.day) {
@@ -60,6 +67,7 @@ class _PlanningPageState extends State<PlanningPage> {
     return false;
   }
 
+  //affichage de l'écran
   @override
   Widget build(BuildContext context) {
     return Scaffold(

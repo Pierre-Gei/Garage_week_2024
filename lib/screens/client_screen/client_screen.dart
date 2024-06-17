@@ -9,6 +9,7 @@ import '../../services/entrepriseServices.dart';
 import '../../widgets/_confirmLogout.dart';
 import '../BT_device_connect_screen/bt_device_connect_screen.dart';
 
+//classe de l'écran client
 class ClientScreen extends StatelessWidget {
   final User user;
   static const routeName = '/clientScreen';

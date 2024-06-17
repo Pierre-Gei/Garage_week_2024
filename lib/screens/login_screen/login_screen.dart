@@ -6,10 +6,7 @@ import '../chauffeur_screen/chauffeur_screen.dart';
 import '../client_screen/client_screen.dart';
 import '../veolia_screen/veolia_screen.dart';
 
-void main() {
-  runApp(UserLoginPage(userType: 'client'));
-}
-
+//classe de l'écran de connexion
 class UserLoginPage extends StatelessWidget {
   final String userType;
   final usernameController = TextEditingController();
@@ -17,6 +14,7 @@ class UserLoginPage extends StatelessWidget {
 
   UserLoginPage({required this.userType, super.key});
 
+  //affichage de l'écran de connexion
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,7 +107,6 @@ class UserLoginPage extends StatelessWidget {
                   );
                 }
               },
-              child: const Text('Connexion'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                     vertical: 12.0, horizontal: 24.0),
@@ -117,6 +114,7 @@ class UserLoginPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
+              child: const Text('Connexion'),
             ),
           ],
         ),

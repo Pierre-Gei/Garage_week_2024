@@ -2,9 +2,11 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+//écran des statistiques
 class StatistiquesPage extends StatelessWidget {
   const StatistiquesPage({super.key});
 
+  //affichage de l'écran des statistiques
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,6 +21,7 @@ class StatistiquesPage extends StatelessWidget {
             const SizedBox(height: 20),
             Expanded(
               child: LineChart(
+                //affichage du graphique
                 LineChartData(
                   gridData: FlGridData(show: false),
                   titlesData: FlTitlesData(show: false),
@@ -30,6 +33,7 @@ class StatistiquesPage extends StatelessWidget {
                   lineBarsData: [
                     LineChartBarData(
                       spots: [
+                        //données du graphique
                         FlSpot(0, 3),
                         FlSpot(1, 5),
                         FlSpot(2, 4),

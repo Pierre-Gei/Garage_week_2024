@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import '../screens/profile_select_screen/profile_select_screen.dart';
 
+//classe de confirmation de déconnexion
+
 class ConfirmLogout extends StatelessWidget {
   const ConfirmLogout({super.key});
 
+  //bouton de déconnexion
   @override
   Widget build(BuildContext context) {
     return
@@ -15,6 +18,7 @@ class ConfirmLogout extends StatelessWidget {
     );
   }
 
+  //fonction de confirmation de déconnexion
   Future<void> _confirmLogout(BuildContext context) async {
     return showDialog<void>(
       context: context,

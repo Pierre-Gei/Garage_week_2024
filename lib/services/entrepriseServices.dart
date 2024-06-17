@@ -3,10 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/benneModel.dart';
 import '../models/entrepriseModel.dart';
 
+//classe du service de gestion des entreprises
 class EntrepriseServices {
   final CollectionReference _entrepriseCollection =
       FirebaseFirestore.instance.collection('entreprise');
 
+  //ajout d'une entreprise
   Future<void> addEntreprise(Entreprise entreprise) {
     return _entrepriseCollection
         .doc(entreprise.id)
@@ -21,6 +23,7 @@ class EntrepriseServices {
         .catchError((error) => print('Failed to add entreprise: $error'));
   }
 
+  //mise à jour d'une entreprise
   Future<void> updateEntreprise(Entreprise entreprise) {
     return _entrepriseCollection
         .doc(entreprise.id)
@@ -34,6 +37,7 @@ class EntrepriseServices {
         .catchError((error) => print('Failed to update entreprise: $error'));
   }
 
+  //suppression d'une entreprise
   Future<void> deleteEntreprise(String id) {
     return _entrepriseCollection
         .doc(id)
@@ -42,6 +46,7 @@ class EntrepriseServices {
         .catchError((error) => print('Failed to delete entreprise: $error'));
   }
 
+  //suppression de toutes les entreprises
   Future<void> deleteAllEntreprise() {
     return _entrepriseCollection.get().then((querySnapshot) {
       querySnapshot.docs.forEach((doc) {
@@ -50,6 +55,7 @@ class EntrepriseServices {
     });
   }
 
+  //suppression de toutes les entreprises d'une ville
   Future<void> removeBenneFromEntreprise(String entrepriseId, Benne bin) {
     return _entrepriseCollection
         .doc(entrepriseId)
@@ -60,18 +66,21 @@ class EntrepriseServices {
         .catchError((error) => print('Failed to remove benne: $error'));
   }
 
+  //mise à jour de la liste des bennes d'une entreprise
   Future<void> updateBenneList(String entrepriseId, List<String> listBenne) {
     return _entrepriseCollection.doc(entrepriseId).update({
       'listBenne': listBenne,
     });
   }
 
+  //suppression de toutes les bennes d'une entreprise
   Future<void> deleteAllBenneFromEntreprise(String entrepriseId) {
     return _entrepriseCollection.doc(entrepriseId).update({
       'listBenne': [],
     });
   }
 
+  //suppression de toutes les bennes de toutes les entreprises
   Future<void> deleteAllBenne() {
     return _entrepriseCollection.get().then((querySnapshot) {
       querySnapshot.docs.forEach((doc) {
@@ -82,6 +91,7 @@ class EntrepriseServices {
     });
   }
 
+  //récupération d'une entreprise par son id
   Future<Entreprise> getEntrepriseById(String id) async {
     DocumentSnapshot documentSnapshot =
         await _entrepriseCollection.doc(id).get();
@@ -98,6 +108,7 @@ class EntrepriseServices {
     return entreprise;
   }
 
+  //récupération d'une entreprise par son nom
   Future<Entreprise> getEntreprise(String nom) async {
     QuerySnapshot querySnapshot =
         await _entrepriseCollection.where('nom', isEqualTo: nom).get();
@@ -114,6 +125,7 @@ class EntrepriseServices {
     return entreprise;
   }
 
+  //récupération de toutes les entreprises
   Future<List<Entreprise>> getAllEntreprise() async {
     QuerySnapshot querySnapshot = await _entrepriseCollection.get();
     List<Entreprise> listEntreprise = [];
@@ -132,6 +144,7 @@ class EntrepriseServices {
     return listEntreprise;
   }
 
+  //récupération de toutes les bennes de toutes les entreprises
   Future<List<Benne>> getAllBenne() async {
     QuerySnapshot querySnapshot = await _entrepriseCollection.get();
     List<Benne> listBenne = [];
@@ -143,12 +156,14 @@ class EntrepriseServices {
     return listBenne;
   }
 
+  //ajout d'une benne à une entreprise
   Future<void> addBenneToEntreprise(String entrepriseId, Benne benne) {
     return _entrepriseCollection.doc(entrepriseId).update({
       'listBenne': FieldValue.arrayUnion([benne.toJson()]),
     });
   }
 
+  //mise à jour d'une benne d'une entreprise
   Future<void> updateBenneFromEntreprise(
       String entrepriseId, Benne newBenne) async {
     newBenne.emptying = false;

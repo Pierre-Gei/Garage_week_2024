@@ -30,6 +30,7 @@ class _BinUpdateScreenState extends State<BinUpdateScreen> {
     _loadData();
   }
 
+  //chargement des données
   Future<void> _loadData() async {
     List<Benne> fetchedBins = await EntrepriseServices().getAllBenne();
     bluetoothData = await BtService().getBluetoothData();
@@ -45,6 +46,7 @@ class _BinUpdateScreenState extends State<BinUpdateScreen> {
           emptying: false,
         ));
 
+    // Mise à jour de la benne si elle est déjà enregistrée
     if (selectedBin!.id.isNotEmpty) {
       showDialog(
         context: context,
@@ -81,6 +83,7 @@ class _BinUpdateScreenState extends State<BinUpdateScreen> {
     });
   }
 
+  //affichage de l'écran
   @override
   Widget build(BuildContext context) {
     return Scaffold(

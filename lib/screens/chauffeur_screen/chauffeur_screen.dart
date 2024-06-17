@@ -93,7 +93,6 @@ Future<void> _addNewBin(
                   _ShowBinInfo(context, bin, entreprise);
                   Navigator.pop(context);
                 },
-                child: const Text('Info'),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                       vertical: 12.0, horizontal: 24.0),
@@ -101,6 +100,7 @@ Future<void> _addNewBin(
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
+                child: const Text('Info'),
               ),
               const SizedBox(height: 10),
               ElevatedButton(
@@ -112,7 +112,6 @@ Future<void> _addNewBin(
                       .removeBenneFromEntreprise(entreprise.id, bin);
                   Navigator.pop(context);
                 },
-                child: const Text('Récupérer'),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                       vertical: 12.0, horizontal: 24.0),
@@ -120,6 +119,7 @@ Future<void> _addNewBin(
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
+                child: const Text('Récupérer'),
               ),
             ],
           ),
@@ -132,7 +132,6 @@ Future<void> _addNewBin(
     String selectedCompany = '';
     String binNumber = '';
     String binType = '';
-    int fillLevel = 0;
 
     await showModalBottomSheet(
       context: context,

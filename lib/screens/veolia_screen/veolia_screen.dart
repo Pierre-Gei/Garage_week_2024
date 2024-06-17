@@ -13,8 +13,9 @@ import '../planning_screen/planning_screen.dart';
 import '../stats_screen/stats_screen.dart';
 import '../veolia_benne_list_screen/veolia_benne_list_screen.dart';
 
+//classe d'intégration de l'écran de gestion de Veolia
 class Veolia_screen extends StatelessWidget {
-  const Veolia_screen({Key? key, required User user}) : super(key: key);
+  const Veolia_screen({super.key, required User user});
 
   @override
   Widget build(BuildContext context) {
@@ -30,16 +31,19 @@ class Veolia_screen extends StatelessWidget {
   }
 }
 
+//classe de l'écran d'information de Veolia
 class Veolia_info extends StatelessWidget {
   const Veolia_info({super.key});
 
-  Future<void> _requestPermissions() async {
-    await Permission.storage.request();
-  }
+  //fonction de demande de permission de stockage INUTILISÉE
+  //Future<void> _requestPermissions() async {
+  //  await Permission.storage.request();
+  //}
 
+  //écran de gestion de Veolia
   @override
   Widget build(BuildContext context) {
-    _requestPermissions();
+    //_requestPermissions();
     return Scaffold(
       appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 198, 222, 226),
@@ -115,7 +119,7 @@ class Veolia_info extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => VeoliaBenneListScreen()),
+                      builder: (context) => const VeoliaBenneListScreen()),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -134,13 +138,17 @@ class Veolia_info extends StatelessWidget {
   }
 }
 
+//classe de prévisualisation des factures
 class FacturesPreview extends StatelessWidget {
   const FacturesPreview({super.key});
 
+  //prévisualisation des factures
   @override
   Widget build(BuildContext context) {
+    // Récupère les factures depuis la base de données
     final factureServices = FactureServices();
 
+    // Affiche un spinner de chargement pendant le chargement des données
     return FutureBuilder<List<Facture>>(
       future: factureServices.getAllFactures(),
       builder: (context, snapshot) {

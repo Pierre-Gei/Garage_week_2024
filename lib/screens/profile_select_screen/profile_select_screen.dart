@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import '../login_screen/login_screen.dart';
 
-void main() {
-  runApp(const ProfileSelectScreen());
-}
-
+//classe de sélection de profil
 class ProfileSelectScreen extends StatelessWidget {
   const ProfileSelectScreen({super.key});
 
@@ -16,10 +13,11 @@ class ProfileSelectScreen extends StatelessWidget {
     );
   }
 
+  //affichage de l'écran de sélection de profil
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Profile Select Screen',
+      title: 'Sélection de profil',
       theme: ThemeData(
         primarySwatch: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -72,12 +70,13 @@ class ProfileSelect extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 debugPrint('client');
+                //Redirection vers la page de connexion avec le type de profil
                 const ProfileSelectScreen()._navigateToLogin(context, 'client');
               },
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Icon(Icons.person), // Add your desired icon here
+                  Icon(Icons.person),
                   SizedBox(width: 10),
                   Text('client', style: TextStyle(fontSize: 20)),
                 ],
@@ -86,13 +85,14 @@ class ProfileSelect extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 debugPrint('chauffeur');
+                //Redirection vers la page de connexion avec le type de profil
                 const ProfileSelectScreen()
                     ._navigateToLogin(context, 'chauffeur');
               },
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Icon(Icons.drive_eta), // Add your desired icon here
+                  Icon(Icons.drive_eta),
                   SizedBox(width: 10),
                   Text('chauffeur', style: TextStyle(fontSize: 20)),
                 ],
@@ -100,13 +100,14 @@ class ProfileSelect extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
+                //Redirection vers la page de connexion avec le type de profil
                 debugPrint('véolia');
                 const ProfileSelectScreen()._navigateToLogin(context, 'veolia');
               },
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Icon(Icons.business), // Add your desired icon here
+                  Icon(Icons.business),
                   SizedBox(width: 10),
                   Text('véolia', style: TextStyle(fontSize: 20)),
                 ],

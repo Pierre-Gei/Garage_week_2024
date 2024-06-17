@@ -7,12 +7,13 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import '../../services/btService.dart';
 import '../bin_update_screen/bin_update_screen.dart';
 
+//écran de connexion au périphérique Bluetooth
 class BtDeviceConnectScreen extends StatefulWidget {
   var entreprise;
 
   static const routeName = '/btDeviceConnectScreen';
 
-  BtDeviceConnectScreen({required this.entreprise});
+  BtDeviceConnectScreen({super.key, required this.entreprise});
   @override
   _BtDeviceConnectScreenState createState() => _BtDeviceConnectScreenState();
 }
@@ -105,11 +106,11 @@ class _BtDeviceConnectScreenState extends State<BtDeviceConnectScreen> {
                     snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
                 } else if (!isBluetoothEnabled) {
-                  return Center(child: Text('Bluetooth is disabled'));
+                  return const Center(child: Text('Bluetooth is disabled'));
                 } else if (isBluetoothEnabled &&
                     snapshot.connectionState == ConnectionState.active &&
                     !isScanInitiated) {
-                  return Center(
+                  return const Center(
                       child: Text(
                           'No scan initiated'));
                 } else {

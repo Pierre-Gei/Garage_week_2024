@@ -5,22 +5,27 @@ import '../../models/benneModel.dart';
 import '../../services/entrepriseServices.dart';
 
 
+//écran de la liste des bennes
 class VeoliaBenneListScreen extends StatefulWidget {
-  const VeoliaBenneListScreen({Key? key}) : super(key: key);
+  const VeoliaBenneListScreen({super.key});
 
   @override
   _VeoliaBenneListScreenState createState() => _VeoliaBenneListScreenState();
 }
 
+//état de l'écran de la liste des bennes
 class _VeoliaBenneListScreenState extends State<VeoliaBenneListScreen> {
+  //liste des bennes
   List<Benne> _bins = [];
 
+  //chargement des données
   @override
   void initState() {
     super.initState();
     _loadData();
   }
 
+  //chargement des données depuis la base de données
   Future<void> _loadData() async {
     final bins = await EntrepriseServices().getAllBenne();
     setState(() {
@@ -28,8 +33,10 @@ class _VeoliaBenneListScreenState extends State<VeoliaBenneListScreen> {
     });
   }
 
+  //affichage de l'écran
   @override
   Widget build(BuildContext context) {
+    //regroupement des bennes par ville pour l'affichage
     final Map<String, List<Benne>> binsByCity = {};
     _bins.forEach((bin) {
       if (!binsByCity.containsKey(bin.location)) {

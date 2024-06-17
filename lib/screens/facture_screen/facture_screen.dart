@@ -10,6 +10,7 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../models/factureModel.dart';
 import '../../services/factureService.dart';
 
+//classe de l'écran de détail de la facture
 class FactureDetailPage extends StatefulWidget {
   final Map<String, dynamic> facture;
 
@@ -20,9 +21,12 @@ class FactureDetailPage extends StatefulWidget {
 }
 
 class _FactureDetailPageState extends State<FactureDetailPage> {
+  //source de données de la facture
   late InvoiceDataSource _invoiceDataSource;
+  //détails de la facture
   List<Map<String, dynamic>> get details => widget.facture['details'];
 
+  //initialisation de la source de données
   @override
   void initState() {
     super.initState();
@@ -33,6 +37,7 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
     );
   }
 
+  //mise à jour d'une cellule
   void _updateCell(DataGridCell<dynamic> cell, dynamic newValue) {
     final rowIndex = _invoiceDataSource.dataGridRows
         .indexWhere((row) => row.getCells().contains(cell));
@@ -54,6 +59,7 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
     });
   }
 
+  //suppression d'une ligne
   void _removeRow(int index) {
     setState(() {
       _invoiceDataSource.details.removeAt(index);
@@ -61,6 +67,7 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
     });
   }
 
+  //ajout d'une ligne
   void _addRow() {
     setState(() {
       _invoiceDataSource.details.add({
@@ -73,6 +80,7 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
     });
   }
 
+  //exportation de la facture au format CSV INUTILISÉ
   Future<void> _exportToCSV() async {
     final status = await Permission.storage.request();
 
@@ -103,6 +111,7 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
     }
   }
 
+  //affichage de l'écran
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -190,6 +199,7 @@ class _FactureDetailPageState extends State<FactureDetailPage> {
   }
 }
 
+//classe de l'écran des factures
 class FacturesPage extends StatelessWidget {
   const FacturesPage({super.key});
 
@@ -205,7 +215,7 @@ class FacturesPage extends StatelessWidget {
         );
         Widget body;
         if (snapshot.connectionState == ConnectionState.waiting) {
-          body = CircularProgressIndicator();
+          body = const CircularProgressIndicator();
         } else if (snapshot.hasError) {
           body = Text('Error: ${snapshot.error}');
         } else {
@@ -244,6 +254,7 @@ class FacturesPage extends StatelessWidget {
   }
 }
 
+//source de données de la facture
 class InvoiceDataSource extends DataGridSource {
   InvoiceDataSource(this.details, this.updateCell, this.removeRow) {
     buildDataGridRows();
@@ -264,6 +275,7 @@ class InvoiceDataSource extends DataGridSource {
         const DataGridCell<Icon>(columnName: 'delete', value: Icon(Icons.delete)),
       ]);
     }).toList();
+    //Notifie le DataGrid de la mise à jour des lignes
     notifyListeners();
   }
 
