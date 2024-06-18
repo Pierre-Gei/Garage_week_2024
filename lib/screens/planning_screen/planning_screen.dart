@@ -30,7 +30,7 @@ class _PlanningPageState extends State<PlanningPage> {
           daysDuration: 1,
           dateTime: TimePlannerDateTime(
             //calcul de la date de la tâche en fonction de la date de vidage de la benne
-            day: bin.emptyingDate!.difference(DateTime.now()).inDays,
+            day: bin.emptyingDate!.difference(DateTime.now()).inDays + 1,
             hour: bin.emptyingDate!.hour.toInt(),
             minutes: 0,
           ),
@@ -40,8 +40,21 @@ class _PlanningPageState extends State<PlanningPage> {
         if (newTask.dateTime.hour < 8) {
           newTask.dateTime.hour = 8;
         }
+        if (newTask.dateTime.hour > 20) {
+          newTask.dateTime.day += 1;
+          newTask.dateTime.hour = 8;
+        }
         //Evite les tâches qui se chevauchent
         if (!doesTaskOverlap(newTask)) {
+          tasks.add(newTask);
+        } else {
+          while (doesTaskOverlap(newTask)) {
+            newTask.dateTime.hour += 1;
+            if (newTask.dateTime.hour > 20) {
+              newTask.dateTime.day += 1;
+              newTask.dateTime.hour = 8;
+            }
+          }
           tasks.add(newTask);
         }
       }
